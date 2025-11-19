@@ -1,0 +1,321 @@
+/**
+ * ResearchHub API Service
+ * 
+ * Backend API Base URL: http://localhost:8000/api/v1
+ * 
+ * Role Mapping:
+ * - Frontend: 'client' / 'freelancer'
+ * - Backend: 'client' / 'freelancer'
+ * - UI Display: 'Post Projects' / 'Offer Services'
+ * 
+ * All API calls use credentials: 'include' for cookie-based authentication
+ */
+
+const API_BASE_URL = 'http://localhost:8000/api/v1';
+
+// Register user
+export const registerUser = async (userData: {
+  fullname: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  role: 'client' | 'freelancer';
+}) => {
+  const response = await fetch(`${API_BASE_URL}/user/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(userData),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Registration failed');
+  }
+  
+  return data;
+};
+
+// Login user
+export const loginUser = async (credentials: {
+  email: string;
+  password: string;
+}) => {
+  const response = await fetch(`${API_BASE_URL}/user/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(credentials),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Login failed');
+  }
+  
+  return data;
+};
+
+// Google signup
+export const googleSignup = async (token: string, role: 'client' | 'freelancer') => {
+  const response = await fetch(`${API_BASE_URL}/user/google-signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ token, role }),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Google signup failed');
+  }
+  
+  return data;
+};
+
+// Logout user
+export const logoutUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/user/logout`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Logout failed');
+  }
+  
+  return data;
+};
+
+// Update profile
+export const updateProfile = async (profileData: FormData) => {
+  const response = await fetch(`${API_BASE_URL}/user/profile/update`, {
+    method: 'POST',
+    credentials: 'include',
+    body: profileData, // FormData for file upload
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Profile update failed');
+  }
+  
+  return data;
+};
+
+// Get current user from backend session
+export const getCurrentUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/user/me`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch user');
+  }
+  
+  return data;
+};
+
+// ===== PROJECT API ENDPOINTS =====
+
+// Create a new project (Client only)
+export const createProject = async (projectData: {
+  title: string;
+  introduction: string;
+  detailedRequirements: string;
+  skills: string[];
+  deliverables: string;
+  deadline: string;
+  budgetMin: string;
+  budgetMax: string;
+  category?: string;
+  files?: File[];
+}) => {
+  const formData = new FormData();
+  
+  formData.append('title', projectData.title);
+  formData.append('introduction', projectData.introduction);
+  formData.append('detailedRequirements', projectData.detailedRequirements);
+  formData.append('skills', JSON.stringify(projectData.skills));
+  formData.append('deliverables', projectData.deliverables);
+  formData.append('deadline', projectData.deadline);
+  formData.append('budgetMin', projectData.budgetMin);
+  formData.append('budgetMax', projectData.budgetMax);
+  if (projectData.category) {
+    formData.append('category', projectData.category);
+  }
+  
+  // Append files if any
+  if (projectData.files && projectData.files.length > 0) {
+    projectData.files.forEach((file) => {
+      formData.append('files', file);
+    });
+  }
+
+  const response = await fetch(`${API_BASE_URL}/project/create`, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData,
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to create project');
+  }
+  
+  return data;
+};
+
+// Get all projects (for freelancers - shows open projects)
+export const getAllProjects = async (filters?: {
+  status?: string;
+  skills?: string;
+  budgetMin?: string;
+  budgetMax?: string;
+  search?: string;
+}) => {
+  const queryParams = new URLSearchParams();
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) queryParams.append(key, value);
+    });
+  }
+
+  const response = await fetch(`${API_BASE_URL}/project/all?${queryParams}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch projects');
+  }
+  
+  return data;
+};
+
+// Get client's own projects
+export const getMyProjects = async (status?: string) => {
+  const queryParams = status ? `?status=${status}` : '';
+  
+  const response = await fetch(`${API_BASE_URL}/project/my-projects${queryParams}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch your projects');
+  }
+  
+  return data;
+};
+
+// Get project statistics for client dashboard
+export const getProjectStats = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/stats`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch project stats');
+  }
+  
+  return data;
+};
+
+// Get single project by ID
+export const getProjectById = async (id: string) => {
+  const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch project');
+  }
+  
+  return data;
+};
+
+// Update project (Client only)
+export const updateProject = async (id: string, updates: any) => {
+  const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(updates),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update project');
+  }
+  
+  return data;
+};
+
+// Delete project (Client only)
+export const deleteProject = async (id: string) => {
+  const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to delete project');
+  }
+  
+  return data;
+};
+
+// Submit bid on project (Freelancer only)
+export const submitBid = async (projectId: string, bidData: {
+  amount: number;
+  proposal: string;
+}) => {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/bid`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(bidData),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to submit bid');
+  }
+  
+  return data;
+};
