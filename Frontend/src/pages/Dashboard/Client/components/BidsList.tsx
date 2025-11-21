@@ -284,12 +284,7 @@ export default function BidsList({ projectId, projectTitle, onClose, onBidAccept
           <p className="text-sm text-gray-600">
             Total Bids: <span className="font-semibold">{bids.length}</span>
           </p>
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all"
-          >
-            Close
-          </button>
+        
         </div>
       </div>
     </div>

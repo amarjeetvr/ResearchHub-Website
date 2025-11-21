@@ -10,6 +10,10 @@ import {
   acceptBid,
   rejectBid,
   getProjectStats,
+  getMyProposals,
+  getMyActiveProjects,
+  getMyCompletedProjects,
+  getFreelancerStats,
 } from "../controllers/project.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { multipleUpload } from "../middlewares/mutler.js";
@@ -21,6 +25,10 @@ router.post("/create", isAuthenticated, multipleUpload, createProject);
 router.get("/all", getAllProjects); // Public - no authentication required
 router.get("/my-projects", isAuthenticated, getMyProjects);
 router.get("/stats", isAuthenticated, getProjectStats);
+router.get("/my-proposals", isAuthenticated, getMyProposals);
+router.get("/my-active-projects", isAuthenticated, getMyActiveProjects);
+router.get("/my-completed-projects", isAuthenticated, getMyCompletedProjects);
+router.get("/freelancer-stats", isAuthenticated, getFreelancerStats);
 router.get("/:id", isAuthenticated, getProjectById); // Protected - requires login
 router.put("/:id", isAuthenticated, updateProject);
 router.delete("/:id", isAuthenticated, deleteProject);

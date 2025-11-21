@@ -558,6 +558,207 @@ export const rejectBid = async (req, res) => {
   }
 };
 
+// Get freelancer's proposals (Freelancer only)
+export const getMyProposals = async (req, res) => {
+  try {
+    const freelancerId = req.id;
+
+    const user = await User.findById(freelancerId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(403).json({
+        message: "Only freelancers can view their proposals",
+        success: false,
+      });
+    }
+
+    // Find all projects where the freelancer has submitted a bid
+    const projects = await Project.find({
+      "bids.freelancerId": freelancerId,
+    })
+      .populate("clientId", "fullname email profilePhoto")
+      .sort({ createdAt: -1 });
+
+    // Extract only the freelancer's bids from each project
+    const proposals = projects.map((project) => {
+      const myBid = project.bids.find(
+        (bid) => bid.freelancerId.toString() === freelancerId
+      );
+      return {
+        _id: myBid._id,
+        project: {
+          _id: project._id,
+          title: project.title,
+          introduction: project.introduction,
+          category: project.category,
+          budgetMin: project.budgetMin,
+          budgetMax: project.budgetMax,
+          deadline: project.deadline,
+          status: project.status,
+          clientId: project.clientId,
+        },
+        amount: myBid.amount,
+        proposal: myBid.proposal,
+        submittedAt: myBid.submittedAt,
+        status: myBid.status,
+      };
+    });
+
+    return res.status(200).json({
+      proposals,
+      count: proposals.length,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Get my proposals error:", error);
+    return res.status(500).json({
+      message: "Failed to fetch proposals",
+      success: false,
+    });
+  }
+};
+
+// Get freelancer's active projects (Freelancer only)
+export const getMyActiveProjects = async (req, res) => {
+  try {
+    const freelancerId = req.id;
+
+    const user = await User.findById(freelancerId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(403).json({
+        message: "Only freelancers can view their active projects",
+        success: false,
+      });
+    }
+
+    const projects = await Project.find({
+      assignedFreelancer: freelancerId,
+      status: "in-progress",
+    })
+      .populate("clientId", "fullname email profilePhoto")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      projects,
+      count: projects.length,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Get my active projects error:", error);
+    return res.status(500).json({
+      message: "Failed to fetch active projects",
+      success: false,
+    });
+  }
+};
+
+// Get freelancer's completed projects (Freelancer only)
+export const getMyCompletedProjects = async (req, res) => {
+  try {
+    const freelancerId = req.id;
+
+    const user = await User.findById(freelancerId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(403).json({
+        message: "Only freelancers can view their completed projects",
+        success: false,
+      });
+    }
+
+    const projects = await Project.find({
+      assignedFreelancer: freelancerId,
+      status: "completed",
+    })
+      .populate("clientId", "fullname email profilePhoto")
+      .sort({ completedAt: -1 });
+
+    return res.status(200).json({
+      projects,
+      count: projects.length,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Get my completed projects error:", error);
+    return res.status(500).json({
+      message: "Failed to fetch completed projects",
+      success: false,
+    });
+  }
+};
+
+// Get freelancer statistics for dashboard
+export const getFreelancerStats = async (req, res) => {
+  try {
+    const freelancerId = req.id;
+
+    const user = await User.findById(freelancerId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(403).json({
+        message: "Only freelancers can view their statistics",
+        success: false,
+      });
+    }
+
+    // Count active projects
+    const activeProjects = await Project.countDocuments({
+      assignedFreelancer: freelancerId,
+      status: "in-progress",
+    });
+
+    // Count pending proposals
+    const projectsWithPendingBids = await Project.find({
+      "bids.freelancerId": freelancerId,
+      "bids.status": "pending",
+    });
+    const pendingProposals = projectsWithPendingBids.filter((project) =>
+      project.bids.some(
+        (bid) =>
+          bid.freelancerId.toString() === freelancerId &&
+          bid.status === "pending"
+      )
+    ).length;
+
+    // Count completed projects
+    const completedProjects = await Project.countDocuments({
+      assignedFreelancer: freelancerId,
+      status: "completed",
+    });
+
+    // Calculate total earned from accepted bids in completed projects
+    const completed = await Project.find({
+      assignedFreelancer: freelancerId,
+      status: "completed",
+    });
+
+    let totalEarned = 0;
+    completed.forEach((project) => {
+      const acceptedBid = project.bids.find(
+        (bid) =>
+          bid.freelancerId.toString() === freelancerId &&
+          bid.status === "accepted"
+      );
+      if (acceptedBid) {
+        totalEarned += acceptedBid.amount;
+      }
+    });
+
+    return res.status(200).json({
+      stats: {
+        activeProjects,
+        pendingProposals,
+        completedProjects,
+        totalEarned,
+      },
+      success: true,
+    });
+  } catch (error) {
+    console.error("Get freelancer stats error:", error);
+    return res.status(500).json({
+      message: "Failed to fetch statistics",
+      success: false,
+    });
+  }
+};
+
 // Get project statistics for client dashboard
 export const getProjectStats = async (req, res) => {
   try {

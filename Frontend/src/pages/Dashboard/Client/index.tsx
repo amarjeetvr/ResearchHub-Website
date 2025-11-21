@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { FolderOpen, Clock, CheckCircle, MessageSquare, DollarSign, Plus, Search } from 'lucide-react';
 import ProjectPostingWizard from '../../../components/ProjectPostingWizard';
 import BidsList from './components/BidsList';
+import ProjectDetails from './components/ProjectDetails';
 import { getMyProjects, getProjectStats } from '../../../services/api';
 import toast from 'react-hot-toast';
 
 export default function ClientDashboard() {
   const [showPostProject, setShowPostProject] = useState(false);
   const [showBidsList, setShowBidsList] = useState(false);
+  const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('active');
   const [projects, setProjects] = useState<any[]>([]);
@@ -64,6 +66,25 @@ export default function ClientDashboard() {
   const handleBidAccepted = () => {
     fetchProjects();
     fetchStats();
+  };
+
+  const handleViewDetails = (project: any) => {
+    setSelectedProject(project);
+    setShowProjectDetails(true);
+  };
+
+  const maskName = (fullname: string): string => {
+    const names = fullname.trim().split(' ');
+    return names.map(name => {
+      if (name.length === 0) return '';
+      return name.charAt(0).toUpperCase() + '***';
+    }).join(' ');
+  };
+
+  const getAcceptedBidAmount = (project: any): number | null => {
+    if (!project.bids || project.bids.length === 0) return null;
+    const acceptedBid = project.bids.find((bid: any) => bid.status === 'accepted');
+    return acceptedBid ? acceptedBid.amount : null;
   };
 
   const statsDisplay = [
@@ -222,8 +243,15 @@ export default function ClientDashboard() {
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <div>
-                          <div className="text-xs text-gray-500">Budget</div>
-                          <div className="font-bold text-[#2D6CDF]">${project.budgetMin} - ${project.budgetMax}</div>
+                          <div className="text-xs text-gray-500">
+                            {getAcceptedBidAmount(project) ? 'Fixed Budget' : 'Budget Range'}
+                          </div>
+                          <div className="font-bold text-[#2D6CDF]">
+                            {getAcceptedBidAmount(project) 
+                              ? `$${getAcceptedBidAmount(project)?.toLocaleString()}`
+                              : `$${project.budgetMin} - ${project.budgetMax}`
+                            }
+                          </div>
                         </div>
                         <div>
                           <div className="text-xs text-gray-500">Deadline</div>
@@ -239,7 +267,7 @@ export default function ClientDashboard() {
                           <div>
                             <div className="text-xs text-gray-500">Researcher</div>
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-[#1F1F1F]">{project.assignedFreelancer.fullname}</span>
+                              <span className="font-semibold text-[#1F1F1F]">{maskName(project.assignedFreelancer.fullname)}</span>
                             </div>
                           </div>
                         )}
@@ -276,7 +304,10 @@ export default function ClientDashboard() {
                           <MessageSquare size={18} />
                           Chat
                         </button>
-                        <button className="border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all">
+                        <button 
+                          onClick={() => handleViewDetails(project)}
+                          className="border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all"
+                        >
                           View Details
                         </button>
                       </>
@@ -349,6 +380,16 @@ export default function ClientDashboard() {
             setSelectedProject(null);
           }}
           onBidAccepted={handleBidAccepted}
+        />
+      )}
+
+      {showProjectDetails && selectedProject && (
+        <ProjectDetails
+          project={selectedProject}
+          onClose={() => {
+            setShowProjectDetails(false);
+            setSelectedProject(null);
+          }}
         />
       )}
     </div>

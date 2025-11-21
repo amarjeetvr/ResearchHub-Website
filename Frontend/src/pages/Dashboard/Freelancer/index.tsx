@@ -1,17 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X } from 'lucide-react';
-import { getAllProjects, submitBid } from '../../../services/api';
+import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X, Eye } from 'lucide-react';
+import { getAllProjects, submitBid, getMyProposals, getMyActiveProjects, getMyCompletedProjects, getFreelancerStats } from '../../../services/api';
+import FreelancerProjectDetails from './components/FreelancerProjectDetails';
 import toast from 'react-hot-toast';
 
 export default function FreelancerDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('available');
   const [projects, setProjects] = useState<any[]>([]);
+  const [proposals, setProposals] = useState<any[]>([]);
+  const [activeProjects, setActiveProjects] = useState<any[]>([]);
+  const [completedProjects, setCompletedProjects] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    activeProjects: 0,
+    pendingProposals: 0,
+    completedProjects: 0,
+    totalEarned: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showProposalModal, setShowProposalModal] = useState(false);
+  const [showProjectDetails, setShowProjectDetails] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProposal, setSelectedProposal] = useState<any>(null);
   const [submittingProposal, setSubmittingProposal] = useState(false);
   const [proposalData, setProposalData] = useState({
     proposedFees: '',
@@ -20,8 +32,23 @@ export default function FreelancerDashboard() {
   });
 
   useEffect(() => {
-    fetchProjects();
+    fetchAllData();
   }, []);
+
+  const fetchAllData = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchProjects(),
+        fetchProposals(),
+        fetchActiveProjects(),
+        fetchCompletedProjects(),
+        fetchStats(),
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchProjects = async () => {
     try {
@@ -30,9 +57,51 @@ export default function FreelancerDashboard() {
         setProjects(response.projects);
       }
     } catch (error: any) {
-      toast.error(error.message || 'Failed to fetch projects');
-    } finally {
-      setLoading(false);
+      console.error('Failed to fetch projects:', error);
+    }
+  };
+
+  const fetchProposals = async () => {
+    try {
+      const response = await getMyProposals();
+      if (response.success) {
+        setProposals(response.proposals);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch proposals:', error);
+    }
+  };
+
+  const fetchActiveProjects = async () => {
+    try {
+      const response = await getMyActiveProjects();
+      if (response.success) {
+        setActiveProjects(response.projects);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch active projects:', error);
+    }
+  };
+
+  const fetchCompletedProjects = async () => {
+    try {
+      const response = await getMyCompletedProjects();
+      if (response.success) {
+        setCompletedProjects(response.projects);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch completed projects:', error);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await getFreelancerStats();
+      if (response.success) {
+        setStats(response.stats);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch stats:', error);
     }
   };
 
@@ -64,10 +133,31 @@ export default function FreelancerDashboard() {
     return (words[0][0] + words[words.length - 1][0]).toUpperCase();
   };
 
+  const maskName = (fullname: string): string => {
+    if (!fullname) return 'Anonymous';
+    const names = fullname.trim().split(' ');
+    return names.map(name => {
+      if (name.length === 0) return '';
+      return name.charAt(0).toUpperCase() + '***';
+    }).join(' ');
+  };
+
   const handleSubmitProposalClick = (e: React.MouseEvent, project: any) => {
     e.stopPropagation();
     setSelectedProject(project);
     setShowProposalModal(true);
+  };
+
+  const handleViewProjectDetails = (project: any, proposal?: any) => {
+    setSelectedProject(project);
+    setSelectedProposal(proposal || null);
+    setShowProjectDetails(true);
+  };
+
+  const handleCloseProjectDetails = () => {
+    setShowProjectDetails(false);
+    setSelectedProject(null);
+    setSelectedProposal(null);
   };
 
   const handleSubmitProposal = async () => {
@@ -93,7 +183,7 @@ export default function FreelancerDashboard() {
         setShowProposalModal(false);
         setProposalData({ proposedFees: '', timeline: '', coverLetter: '' });
         setSelectedProject(null);
-        fetchProjects(); // Refresh projects to update bid count
+        fetchAllData(); // Refresh all data
       }
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit proposal');
@@ -102,11 +192,11 @@ export default function FreelancerDashboard() {
     }
   };
 
-  const stats = [
-    { label: 'Active Projects', value: '0', icon: Briefcase, color: 'bg-blue-500' },
-    { label: 'Pending Proposals', value: '0', icon: Clock, color: 'bg-yellow-500' },
-    { label: 'Completed Projects', value: '0', icon: CheckCircle, color: 'bg-green-500' },
-    { label: 'Total Earned', value: '$0', icon: DollarSign, color: 'bg-purple-500' }
+  const statsDisplay = [
+    { label: 'Active Projects', value: stats.activeProjects.toString(), icon: Briefcase, color: 'bg-blue-500' },
+    { label: 'Pending Proposals', value: stats.pendingProposals.toString(), icon: Clock, color: 'bg-yellow-500' },
+    { label: 'Completed Projects', value: stats.completedProjects.toString(), icon: CheckCircle, color: 'bg-green-500' },
+    { label: 'Total Earned', value: `$${stats.totalEarned.toLocaleString()}`, icon: DollarSign, color: 'bg-purple-500' }
   ];
 
 
@@ -142,7 +232,7 @@ export default function FreelancerDashboard() {
 
       <div className="max-w-[1600px] mx-auto px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, idx) => (
+          {statsDisplay.map((stat, idx) => (
             <div key={idx} className="bg-white rounded-2xl shadow-md p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
@@ -206,24 +296,120 @@ export default function FreelancerDashboard() {
 
           <div className="space-y-4">
             {activeTab === 'active' && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No active projects yet</p>
-                <p className="text-gray-400 text-sm mt-2">Browse available projects and submit proposals to get started</p>
-              </div>
+              activeProjects.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">No active projects yet</p>
+                  <p className="text-gray-400 text-sm mt-2">Browse available projects and submit proposals to get started</p>
+                </div>
+              ) : (
+                activeProjects.map((project) => (
+                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{project.title}</h3>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-sm text-gray-600">Client: {maskName(project.clientId?.fullname || 'Anonymous')}</span>
+                          <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-yellow-100 text-yellow-700">
+                            IN PROGRESS
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                      </div>
+                      <div className="text-right ml-4">
+                        <div className="text-sm text-gray-500">Progress</div>
+                        <div className="text-2xl font-bold text-[#2D6CDF]">{project.progress}%</div>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={() => handleViewProjectDetails(project)}
+                        className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                      >
+                        <Eye size={18} />
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )
             )}
 
             {activeTab === 'proposals' && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No pending proposals yet</p>
-              </div>
+              proposals.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">No pending proposals yet</p>
+                  <p className="text-gray-400 text-sm mt-2">Start submitting proposals to available projects</p>
+                </div>
+              ) : (
+                proposals.map((proposal) => (
+                  <div key={proposal._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{proposal.project.title}</h3>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-sm text-gray-600">
+                            Submitted {formatDate(proposal.submittedAt)}
+                          </span>
+                          <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${
+                            proposal.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            proposal.status === 'accepted' ? 'bg-green-100 text-green-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {proposal.status.toUpperCase()}
+                          </span>
+                          <span className="text-sm text-gray-600">Client: {maskName(proposal.project.clientId?.fullname || 'Anonymous')}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{proposal.project.introduction}</p>
+                      </div>
+                      <div className="text-right ml-4">
+                        <div className="text-sm text-gray-500">Your Bid</div>
+                        <div className="text-2xl font-bold text-[#2D6CDF]">${proposal.amount}</div>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => handleViewProjectDetails(proposal.project, proposal)}
+                      className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                    >
+                      <Eye size={18} />
+                      View Project
+                    </button>
+                  </div>
+                ))
+              )
             )}
 
-
-
             {activeTab === 'completed' && (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No completed projects yet</p>
-              </div>
+              completedProjects.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-500 text-lg">No completed projects yet</p>
+                  <p className="text-gray-400 text-sm mt-2">Complete projects to build your portfolio</p>
+                </div>
+              ) : (
+                completedProjects.map((project) => (
+                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{project.title}</h3>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-sm text-gray-600">
+                            Completed {formatDate(project.completedAt)}
+                          </span>
+                          <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-green-100 text-green-700">
+                            COMPLETED
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                      </div>
+                      <div className="text-right ml-4">
+                        <div className="text-sm text-gray-500">Earned</div>
+                        <div className="text-2xl font-bold text-green-600">
+                          ${project.bids?.find((b: any) => b.status === 'accepted')?.amount || 0}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )
             )}
 
             {activeTab === 'available' && (() => {
@@ -258,6 +444,9 @@ export default function FreelancerDashboard() {
                             <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#2D6CDF] text-white text-xs font-bold">
                               {getInitials(project.clientId?.fullname || 'Anonymous')}
                             </div>
+                            <span className="text-sm text-gray-700 font-medium">
+                              {maskName(project.clientId?.fullname || 'Anonymous')}
+                            </span>
                           </div>
                         </div>
                         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
@@ -397,6 +586,15 @@ export default function FreelancerDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Project Details Modal */}
+      {showProjectDetails && selectedProject && (
+        <FreelancerProjectDetails
+          project={selectedProject}
+          proposal={selectedProposal}
+          onClose={handleCloseProjectDetails}
+        />
       )}
     </div>
   );

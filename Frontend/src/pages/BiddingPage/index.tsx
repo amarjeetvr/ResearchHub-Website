@@ -140,6 +140,15 @@ export default function BiddingPage() {
     return (words[0][0] + words[words.length - 1][0]).toUpperCase();
   };
 
+  const maskName = (fullname: string): string => {
+    if (!fullname) return 'Anonymous';
+    const names = fullname.trim().split(' ');
+    return names.map(name => {
+      if (name.length === 0) return '';
+      return name.charAt(0).toUpperCase() + '***';
+    }).join(' ');
+  };
+
   const handleViewProject = (projectId: string) => {
     if (!isAuthenticated) {
       toast.error('Please login first');
@@ -220,10 +229,13 @@ export default function BiddingPage() {
                         <span className="text-sm text-gray-600">Posted {getTimeAgo(proj.createdAt)}</span>
                         <span className="text-sm text-[#2D6CDF] font-semibold">{proj.bids?.length || 0} bids</span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-sm text-gray-600">by client</span>
+                          <span className="text-sm text-gray-600">by</span>
                           <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#2D6CDF] text-white text-xs font-bold">
                             {getInitials(proj.clientId?.fullname || 'Anonymous')}
                           </div>
+                          <span className="text-sm text-gray-700 font-medium">
+                            {maskName(proj.clientId?.fullname || 'Anonymous')}
+                          </span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{proj.introduction}</p>
@@ -279,7 +291,7 @@ export default function BiddingPage() {
                 <div>
                   <h1 className="text-3xl font-bold text-[#1F1F1F] mb-2">{project.title}</h1>
                   <div className="flex items-center gap-3 text-sm text-gray-600">
-                    <span>Posted by <span className="font-semibold text-[#2D6CDF]">{project.clientId?.fullname || 'Anonymous'}</span></span>
+                    <span>Posted by <span className="font-semibold text-[#2D6CDF]">{maskName(project.clientId?.fullname || 'Anonymous')}</span></span>
                     <span>•</span>
                     <span>{getTimeAgo(project.createdAt)}</span>
                     <span>•</span>
@@ -515,7 +527,7 @@ export default function BiddingPage() {
                   {project.clientId?.fullname?.substring(0, 2).toUpperCase() || 'CL'}
                 </div>
                 <div>
-                  <div className="font-semibold text-[#1F1F1F]">{project.clientId?.fullname || 'Client'}</div>
+                  <div className="font-semibold text-[#1F1F1F]">{maskName(project.clientId?.fullname || 'Client')}</div>
                   <div className="text-sm text-gray-500">Member since 2024</div>
                 </div>
               </div>

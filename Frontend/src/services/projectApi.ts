@@ -229,3 +229,67 @@ export const rejectBid = async (projectId: string, bidId: string) => {
   
   return data;
 };
+
+// Get freelancer's proposals (Freelancer only)
+export const getMyProposals = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/my-proposals`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch proposals');
+  }
+  
+  return data;
+};
+
+// Get freelancer's active projects (Freelancer only)
+export const getMyActiveProjects = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/my-active-projects`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch active projects');
+  }
+  
+  return data;
+};
+
+// Get freelancer's completed projects (Freelancer only)
+export const getMyCompletedProjects = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/my-completed-projects`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch completed projects');
+  }
+  
+  return data;
+};
+
+// Get freelancer statistics (Freelancer only)
+export const getFreelancerStats = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/freelancer-stats`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch freelancer stats');
+  }
+  
+  return data;
+};

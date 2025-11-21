@@ -38,4 +38,8 @@ export {
   submitBid,
   acceptBid,
   rejectBid,
+  getMyProposals,
+  getMyActiveProjects,
+  getMyCompletedProjects,
+  getFreelancerStats,
 } from './projectApi';
