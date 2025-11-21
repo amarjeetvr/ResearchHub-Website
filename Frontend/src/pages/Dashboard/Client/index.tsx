@@ -8,6 +8,7 @@ export default function ClientDashboard() {
   const [showPostProject, setShowPostProject] = useState(false);
   const [activeTab, setActiveTab] = useState('active');
   const [projects, setProjects] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [stats, setStats] = useState({
     activeProjects: 0,
     inProgressProjects: 0,
@@ -60,9 +61,19 @@ export default function ClientDashboard() {
   ];
 
   const filteredProjects = projects.filter(p => {
-    if (activeTab === 'active') return p.status === 'open' || p.status === 'in-progress';
-    if (activeTab === 'completed') return p.status === 'completed';
-    return true;
+    // Filter by tab
+    let matchesTab = true;
+    if (activeTab === 'active') matchesTab = p.status === 'open' || p.status === 'in-progress';
+    if (activeTab === 'completed') matchesTab = p.status === 'completed';
+    
+    // Filter by search query
+    const matchesSearch = searchQuery === '' || 
+      p.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.introduction?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.skills?.some((skill: string) => skill.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    return matchesTab && matchesSearch;
   });
 
   const getStatusColor = (status: string) => {
@@ -158,6 +169,8 @@ export default function ClientDashboard() {
               <input
                 type="text"
                 placeholder="Search projects..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF] w-full md:w-64"
               />
             </div>

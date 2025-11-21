@@ -1,12 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send } from 'lucide-react';
-import { getAllProjects } from '../../../services/api';
+import { useNavigate } from 'react-router-dom';
+import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X } from 'lucide-react';
+import { getAllProjects, submitBid } from '../../../services/api';
 import toast from 'react-hot-toast';
 
 export default function FreelancerDashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('available');
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showProposalModal, setShowProposalModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [submittingProposal, setSubmittingProposal] = useState(false);
+  const [proposalData, setProposalData] = useState({
+    proposedFees: '',
+    timeline: '',
+    coverLetter: ''
+  });
 
   useEffect(() => {
     fetchProjects();
@@ -44,6 +55,51 @@ export default function FreelancerDashboard() {
     if (diffInDays === 1) return '1 day ago';
     if (diffInDays < 7) return `${diffInDays} days ago`;
     return formatDate(dateString);
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return 'AN';
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  };
+
+  const handleSubmitProposalClick = (e: React.MouseEvent, project: any) => {
+    e.stopPropagation();
+    setSelectedProject(project);
+    setShowProposalModal(true);
+  };
+
+  const handleSubmitProposal = async () => {
+    if (!proposalData.proposedFees || !proposalData.timeline || !proposalData.coverLetter) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    if (!selectedProject) {
+      toast.error('No project selected');
+      return;
+    }
+
+    setSubmittingProposal(true);
+    try {
+      const response = await submitBid(selectedProject._id, {
+        amount: parseFloat(proposalData.proposedFees),
+        proposal: `Timeline: ${proposalData.timeline} days\n\n${proposalData.coverLetter}`
+      });
+
+      if (response.success) {
+        toast.success('Proposal submitted successfully! Client will be notified.');
+        setShowProposalModal(false);
+        setProposalData({ proposedFees: '', timeline: '', coverLetter: '' });
+        setSelectedProject(null);
+        fetchProjects(); // Refresh projects to update bid count
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to submit proposal');
+    } finally {
+      setSubmittingProposal(false);
+    }
   };
 
   const stats = [
@@ -140,6 +196,8 @@ export default function FreelancerDashboard() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search projects..."
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF] w-full md:w-64"
               />
@@ -168,22 +226,39 @@ export default function FreelancerDashboard() {
               </div>
             )}
 
-            {activeTab === 'available' && (
-              projects.length === 0 ? (
+            {activeTab === 'available' && (() => {
+              const filteredProjects = projects.filter(proj => {
+                if (!searchQuery) return true;
+                const query = searchQuery.toLowerCase();
+                return (
+                  proj.title?.toLowerCase().includes(query) ||
+                  proj.introduction?.toLowerCase().includes(query) ||
+                  proj.skills?.some((skill: string) => skill.toLowerCase().includes(query))
+                );
+              });
+
+              return filteredProjects.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No projects available at the moment</p>
-                  <p className="text-gray-400 text-sm mt-2">Check back later for new opportunities</p>
+                  <p className="text-gray-500 text-lg">No projects found</p>
+                  <p className="text-gray-400 text-sm mt-2">{searchQuery ? 'Try adjusting your search' : 'Check back later for new opportunities'}</p>
                 </div>
               ) : (
-                projects.map((project) => (
-                  <div key={project._id} className="border border-gray-200 rounded-xl p-6 hover:border-[#2D6CDF] transition-all">
+                filteredProjects.map((project) => (
+                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-[#2D6CDF] transition-all cursor-pointer" onClick={() => navigate(`/bidding/${project._id}`)}>
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{project.title}</h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="text-xl font-bold text-[#1F1F1F] hover:text-[#2D6CDF] transition-colors">{project.title}</h3>
+                        </div>
                         <div className="flex items-center gap-3 mb-3">
                           <span className="text-sm text-gray-600">Posted {getTimeAgo(project.createdAt)}</span>
                           <span className="text-sm text-[#2D6CDF] font-semibold">{project.bids?.length || 0} bids</span>
-                          <span className="text-sm text-gray-600">by {project.clientId?.fullname || 'Anonymous'}</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm text-gray-600">by</span>
+                            <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#2D6CDF] text-white text-xs font-bold">
+                              {getInitials(project.clientId?.fullname || 'Anonymous')}
+                            </div>
+                          </div>
                         </div>
                         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
                         <div className="flex flex-wrap gap-2 mb-3">
@@ -205,17 +280,124 @@ export default function FreelancerDashboard() {
                         <div className="text-sm text-gray-500 mt-1">Due: {formatDate(project.deadline)}</div>
                       </div>
                     </div>
-                    <button className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all flex items-center gap-2">
+                    <button 
+                      onClick={(e) => handleSubmitProposalClick(e, project)}
+                      className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                    >
                       <Send size={18} />
                       Submit Proposal
                     </button>
                   </div>
                 ))
-              )
-            )}
+              );
+            })()}
           </div>
         </div>
       </div>
+
+      {/* Proposal Modal */}
+      {showProposalModal && selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowProposalModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-[#1F1F1F]">Submit Your Proposal</h2>
+                <p className="text-sm text-gray-600 mt-1">Project: {selectedProject.title}</p>
+              </div>
+              <button onClick={() => setShowProposalModal(false)} className="text-gray-500 hover:text-gray-700">
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="p-8">
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-[#1F1F1F] mb-2">
+                      Proposed Fees (USD) <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                      <input
+                        type="number"
+                        value={proposalData.proposedFees}
+                        onChange={(e) => setProposalData({ ...proposalData, proposedFees: e.target.value })}
+                        placeholder="950"
+                        className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF]"
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">You'll receive 90% after platform commission</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-[#1F1F1F] mb-2">
+                      Delivery Timeline (Days) <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={proposalData.timeline}
+                      onChange={(e) => setProposalData({ ...proposalData, timeline: e.target.value })}
+                      placeholder="14"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-[#1F1F1F] mb-2">
+                    Cover Letter <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    value={proposalData.coverLetter}
+                    onChange={(e) => setProposalData({ ...proposalData, coverLetter: e.target.value })}
+                    placeholder="Explain why you're the best fit for this project. Include:
+- Your relevant experience
+- Similar projects you've completed
+- Your approach to this specific project
+- Any questions you have for the client"
+                    rows={8}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF] resize-none"
+                  />
+                </div>
+
+                <div className="bg-[#F5F7FA] rounded-xl p-4">
+                  <div className="text-sm space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Your Fee:</span>
+                      <span className="font-semibold">${proposalData.proposedFees || '0'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Platform Commission (10%):</span>
+                      <span className="font-semibold text-red-600">-${proposalData.proposedFees ? (parseFloat(proposalData.proposedFees) * 0.1).toFixed(2) : '0'}</span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-gray-300">
+                      <span className="font-bold text-[#1F1F1F]">You'll Receive:</span>
+                      <span className="font-bold text-green-600">${proposalData.proposedFees ? (parseFloat(proposalData.proposedFees) * 0.9).toFixed(2) : '0'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSubmitProposal}
+                  disabled={submittingProposal}
+                  className="w-full bg-[#2D6CDF] text-white py-3 rounded-xl font-bold hover:bg-[#1F1F1F] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submittingProposal ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      Submit Proposal
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

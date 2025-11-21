@@ -319,3 +319,22 @@ export const submitBid = async (projectId: string, bidData: {
   
   return data;
 };
+
+// Accept bid on project (Client only)
+export const acceptBid = async (projectId: string, bidId: string) => {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/bid/${bidId}/accept`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to accept bid');
+  }
+  
+  return data;
+};

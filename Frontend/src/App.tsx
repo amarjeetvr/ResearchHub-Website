@@ -66,8 +66,14 @@ function AppContent() {
       '/freelancer-dashboard': 'freelancer-dashboard',
       '/admin-dashboard': 'admin-dashboard'
     };
-    const page = pathToPage[location.pathname] || 'home';
-    setCurrentPage(page);
+    
+    // Handle dynamic routes
+    if (location.pathname.startsWith('/bidding')) {
+      setCurrentPage('bidding');
+    } else {
+      const page = pathToPage[location.pathname] || 'home';
+      setCurrentPage(page);
+    }
   }, [location.pathname]);
 
   const handleLogin = async (email: string, password: string) => {

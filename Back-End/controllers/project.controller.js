@@ -430,6 +430,76 @@ export const submitBid = async (req, res) => {
   }
 };
 
+// Accept a bid on a project (Client only)
+export const acceptBid = async (req, res) => {
+  try {
+    const { id, bidId } = req.params;
+    const clientId = req.id;
+
+    // Verify user is a client
+    const user = await User.findById(clientId);
+    if (!user || user.role !== "client") {
+      return res.status(403).json({
+        message: "Only clients can accept bids",
+        success: false,
+      });
+    }
+
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+        success: false,
+      });
+    }
+
+    // Verify client owns this project
+    if (project.clientId.toString() !== clientId) {
+      return res.status(403).json({
+        message: "You can only accept bids on your own projects",
+        success: false,
+      });
+    }
+
+    // Find the bid
+    const bid = project.bids.id(bidId);
+    if (!bid) {
+      return res.status(404).json({
+        message: "Bid not found",
+        success: false,
+      });
+    }
+
+    // Update bid status to accepted
+    bid.status = "accepted";
+    
+    // Assign freelancer to project
+    project.assignedFreelancer = bid.freelancerId;
+    project.status = "in-progress";
+
+    // Reject all other bids
+    project.bids.forEach((b) => {
+      if (b._id.toString() !== bidId && b.status === "pending") {
+        b.status = "rejected";
+      }
+    });
+
+    await project.save();
+
+    return res.status(200).json({
+      message: "Proposal accepted successfully. Notification sent to freelancer.",
+      success: true,
+      project,
+    });
+  } catch (error) {
+    console.error("Accept bid error:", error);
+    return res.status(500).json({
+      message: "Failed to accept bid",
+      success: false,
+    });
+  }
+};
+
 // Get project statistics for client dashboard
 export const getProjectStats = async (req, res) => {
   try {
