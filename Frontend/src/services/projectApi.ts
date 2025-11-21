@@ -293,3 +293,23 @@ export const getFreelancerStats = async () => {
   
   return data;
 };
+
+// Update project progress (Freelancer only)
+export const updateProjectProgress = async (projectId: string, progress: number) => {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/update-progress`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ progress }),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update progress');
+  }
+  
+  return data;
+};

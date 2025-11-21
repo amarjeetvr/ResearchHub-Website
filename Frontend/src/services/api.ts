@@ -42,4 +42,5 @@ export {
   getMyActiveProjects,
   getMyCompletedProjects,
   getFreelancerStats,
+  updateProjectProgress,
 } from './projectApi';

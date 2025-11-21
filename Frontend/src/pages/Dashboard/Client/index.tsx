@@ -389,6 +389,8 @@ export default function ClientDashboard() {
           onClose={() => {
             setShowProjectDetails(false);
             setSelectedProject(null);
+            fetchProjects();
+            fetchStats();
           }}
         />
       )}

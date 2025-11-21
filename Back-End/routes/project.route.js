@@ -14,6 +14,7 @@ import {
   getMyActiveProjects,
   getMyCompletedProjects,
   getFreelancerStats,
+  updateProgress,
 } from "../controllers/project.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { multipleUpload } from "../middlewares/mutler.js";
@@ -31,6 +32,7 @@ router.get("/my-completed-projects", isAuthenticated, getMyCompletedProjects);
 router.get("/freelancer-stats", isAuthenticated, getFreelancerStats);
 router.get("/:id", isAuthenticated, getProjectById); // Protected - requires login
 router.put("/:id", isAuthenticated, updateProject);
+router.patch("/:id/update-progress", isAuthenticated, updateProgress);
 router.delete("/:id", isAuthenticated, deleteProject);
 
 // Bidding operations

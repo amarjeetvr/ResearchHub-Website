@@ -589,11 +589,20 @@ export const getMyProposals = async (req, res) => {
           _id: project._id,
           title: project.title,
           introduction: project.introduction,
+          detailedRequirements: project.detailedRequirements,
+          skills: project.skills,
+          deliverables: project.deliverables,
+          files: project.files,
           category: project.category,
           budgetMin: project.budgetMin,
           budgetMax: project.budgetMax,
           deadline: project.deadline,
           status: project.status,
+          progress: project.progress,
+          assignedFreelancer: project.assignedFreelancer,
+          bids: project.bids,
+          createdAt: project.createdAt,
+          completedAt: project.completedAt,
           clientId: project.clientId,
         },
         amount: myBid.amount,
@@ -754,6 +763,91 @@ export const getFreelancerStats = async (req, res) => {
     console.error("Get freelancer stats error:", error);
     return res.status(500).json({
       message: "Failed to fetch statistics",
+      success: false,
+    });
+  }
+};
+
+// Update project progress (Freelancer only)
+export const updateProgress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { progress } = req.body;
+    const freelancerId = req.id;
+
+    // Verify user is a freelancer
+    const user = await User.findById(freelancerId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(403).json({
+        message: "Only freelancers can update progress",
+        success: false,
+      });
+    }
+
+    // Validate progress value
+    if (progress === undefined || progress === null) {
+      return res.status(400).json({
+        message: "Progress value is required",
+        success: false,
+      });
+    }
+
+    const progressNum = parseInt(progress);
+    if (isNaN(progressNum) || progressNum < 0 || progressNum > 100) {
+      return res.status(400).json({
+        message: "Progress must be a number between 0 and 100",
+        success: false,
+      });
+    }
+
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+        success: false,
+      });
+    }
+
+    // Verify freelancer is assigned to this project
+    if (!project.assignedFreelancer || project.assignedFreelancer.toString() !== freelancerId) {
+      return res.status(403).json({
+        message: "You are not assigned to this project",
+        success: false,
+      });
+    }
+
+    // Verify project is in progress
+    if (project.status !== "in-progress") {
+      return res.status(400).json({
+        message: "Can only update progress for in-progress projects",
+        success: false,
+      });
+    }
+
+    // Update progress
+    project.progress = progressNum;
+
+    // If progress is 100%, optionally mark as completed
+    if (progressNum === 100) {
+      project.status = "completed";
+      project.completedAt = new Date();
+    }
+
+    await project.save();
+
+    const updatedProject = await Project.findById(id)
+      .populate("clientId", "fullname email profilePhoto")
+      .populate("assignedFreelancer", "fullname email profilePhoto");
+
+    return res.status(200).json({
+      message: "Progress updated successfully",
+      project: updatedProject,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Update progress error:", error);
+    return res.status(500).json({
+      message: "Failed to update progress",
       success: false,
     });
   }

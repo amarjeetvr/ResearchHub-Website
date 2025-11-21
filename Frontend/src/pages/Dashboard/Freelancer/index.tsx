@@ -594,6 +594,7 @@ export default function FreelancerDashboard() {
           project={selectedProject}
           proposal={selectedProposal}
           onClose={handleCloseProjectDetails}
+          onProjectUpdate={fetchAllData}
         />
       )}
     </div>

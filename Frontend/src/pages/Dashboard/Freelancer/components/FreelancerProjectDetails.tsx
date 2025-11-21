@@ -1,12 +1,16 @@
-import { X, Calendar, DollarSign, User, FileText, Target, Clock, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { X, Calendar, DollarSign, User, FileText, Target, Clock, CheckCircle, TrendingUp } from 'lucide-react';
+import UpdateProgressModal from './UpdateProgressModal';
 
 interface FreelancerProjectDetailsProps {
   project: any;
   proposal?: any;
   onClose: () => void;
+  onProjectUpdate?: () => void;
 }
 
-export default function FreelancerProjectDetails({ project, proposal, onClose }: FreelancerProjectDetailsProps) {
+export default function FreelancerProjectDetails({ project, proposal, onClose, onProjectUpdate }: FreelancerProjectDetailsProps) {
+  const [showProgressModal, setShowProgressModal] = useState(false);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -144,12 +148,21 @@ export default function FreelancerProjectDetails({ project, proposal, onClose }:
           {/* Progress Bar for In-Progress Projects */}
           {project.status === 'in-progress' && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <Clock className="text-yellow-600" size={20} />
                   <span className="font-semibold text-yellow-800">Project Progress</span>
                 </div>
-                <span className="text-lg font-bold text-yellow-600">{project.progress || 0}%</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-lg font-bold text-yellow-600">{project.progress || 0}%</span>
+                  <button
+                    onClick={() => setShowProgressModal(true)}
+                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors flex items-center gap-2 text-sm font-semibold"
+                  >
+                    <TrendingUp size={16} />
+                    Update Progress
+                  </button>
+                </div>
               </div>
               <div className="w-full bg-yellow-200 rounded-full h-3">
                 <div
@@ -267,6 +280,23 @@ export default function FreelancerProjectDetails({ project, proposal, onClose }:
           </button>
         </div>
       </div>
+
+      {/* Update Progress Modal */}
+      {showProgressModal && (
+        <UpdateProgressModal
+          isOpen={showProgressModal}
+          onClose={() => setShowProgressModal(false)}
+          projectId={project._id}
+          currentProgress={project.progress || 0}
+          projectTitle={project.title}
+          onProgressUpdated={() => {
+            setShowProgressModal(false);
+            if (onProjectUpdate) {
+              onProjectUpdate();
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
