@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { FolderOpen, Clock, CheckCircle, MessageSquare, DollarSign, Plus, Search, Star } from 'lucide-react';
+import { FolderOpen, Clock, CheckCircle, MessageSquare, DollarSign, Plus, Search } from 'lucide-react';
 import ProjectPostingWizard from '../../../components/ProjectPostingWizard';
+import BidsList from './components/BidsList';
 import { getMyProjects, getProjectStats } from '../../../services/api';
 import toast from 'react-hot-toast';
 
 export default function ClientDashboard() {
   const [showPostProject, setShowPostProject] = useState(false);
+  const [showBidsList, setShowBidsList] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('active');
   const [projects, setProjects] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,6 +54,16 @@ export default function ClientDashboard() {
     fetchProjects();
     fetchStats();
     toast.success('Project posted successfully!');
+  };
+
+  const handleViewBids = (project: any) => {
+    setSelectedProject(project);
+    setShowBidsList(true);
+  };
+
+  const handleBidAccepted = () => {
+    fetchProjects();
+    fetchStats();
   };
 
   const statsDisplay = [
@@ -250,7 +263,10 @@ export default function ClientDashboard() {
 
                   <div className="flex lg:flex-col gap-2">
                     {project.status === 'open' && project.bids && (
-                      <button className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all whitespace-nowrap">
+                      <button 
+                        onClick={() => handleViewBids(project)}
+                        className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all whitespace-nowrap"
+                      >
                         View {project.bids.length} Bids
                       </button>
                     )}
@@ -321,6 +337,18 @@ export default function ClientDashboard() {
         <ProjectPostingWizard
           onClose={() => setShowPostProject(false)}
           onComplete={handleProjectPosted}
+        />
+      )}
+
+      {showBidsList && selectedProject && (
+        <BidsList
+          projectId={selectedProject._id}
+          projectTitle={selectedProject.title}
+          onClose={() => {
+            setShowBidsList(false);
+            setSelectedProject(null);
+          }}
+          onBidAccepted={handleBidAccepted}
         />
       )}
     </div>

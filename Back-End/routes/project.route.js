@@ -8,6 +8,7 @@ import {
   deleteProject,
   submitBid,
   acceptBid,
+  rejectBid,
   getProjectStats,
 } from "../controllers/project.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
@@ -27,5 +28,6 @@ router.delete("/:id", isAuthenticated, deleteProject);
 // Bidding operations
 router.post("/:id/bid", isAuthenticated, submitBid);
 router.post("/:id/bid/:bidId/accept", isAuthenticated, acceptBid);
+router.post("/:id/bid/:bidId/reject", isAuthenticated, rejectBid);
 
 export default router;
