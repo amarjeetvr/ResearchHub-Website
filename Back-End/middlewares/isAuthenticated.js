@@ -15,10 +15,25 @@ const isAuthenticated = (req, res, next) => {
     req.id = decoded.userId; // Consistent with token signing
     next();
   } catch (err) {
-    console.error("Auth middleware error:", err);
+    // Clear invalid token cookie
+    res.clearCookie("token");
+    
+    // Provide helpful error message based on error type
+    let message = "Invalid or expired token";
+    if (err.name === "JsonWebTokenError" && err.message.includes("invalid signature")) {
+      message = "Authentication failed. Please login again.";
+    } else if (err.name === "TokenExpiredError") {
+      message = "Your session has expired. Please login again.";
+    }
+    
+    if (process.env.NODE_ENV === "development") {
+      console.error("Auth middleware error:", err.name, "-", err.message);
+    }
+    
     return res.status(401).json({ 
-      message: "Invalid or expired token", 
-      success: false 
+      message,
+      success: false,
+      requiresLogin: true
     });
   }
 };

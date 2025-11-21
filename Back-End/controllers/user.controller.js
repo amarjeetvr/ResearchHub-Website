@@ -69,6 +69,10 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (process.env.NODE_ENV === "development") {
+      console.log("Login attempt:", { email, hasPassword: !!password });
+    }
+
     if (!email || !password) {
       return res.status(400).json({
         message: "Email and password are required",
@@ -78,6 +82,9 @@ export const login = async (req, res) => {
 
     let user = await User.findOne({ email });
     if (!user) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("User not found:", email);
+      }
       return res.status(400).json({
         message: "Incorrect email or password.",
         success: false,
@@ -86,6 +93,9 @@ export const login = async (req, res) => {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("Password mismatch for user:", email);
+      }
       return res.status(400).json({
         message: "Incorrect email or password.",
         success: false,
@@ -269,6 +279,21 @@ export const googleSignup = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.id; // From isAuthenticated middleware
+
+    // Handle admin user specially (not in database)
+    if (userId === "admin") {
+      return res.status(200).json({
+        user: {
+          _id: "admin",
+          fullname: "Admin",
+          email: process.env.ADMIN_EMAIL,
+          phoneNumber: "",
+          role: "admin",
+          profilePhoto: "",
+        },
+        success: true
+      });
+    }
 
     const user = await User.findById(userId).select('-password');
 

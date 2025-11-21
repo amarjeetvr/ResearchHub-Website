@@ -6,7 +6,7 @@ interface User {
   fullname: string;
   email: string;
   phoneNumber: string;
-  role: 'client' | 'freelancer';
+  role: 'client' | 'freelancer' | 'admin';
   profilePhoto?: string;
 }
 

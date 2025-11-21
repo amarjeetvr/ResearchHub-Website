@@ -60,7 +60,7 @@ function AppContent() {
       '/pricing': 'pricing',
       '/login': 'login',
       '/signup': 'signup',
-      '/admin': 'admin-login',
+      '/admin/login': 'admin-login',
       '/bidding': 'bidding',
       '/messaging': 'messaging',
       '/escrow': 'escrow',
@@ -167,7 +167,7 @@ function AppContent() {
       case 'admin-dashboard':
         // Protect admin dashboard - only allow access if logged in as admin
         if (!isAuthenticated || user?.role !== 'admin') {
-          navigate('/admin');
+          navigate('/admin/login');
           return <AdminLoginPage onAdminLogin={handleAdminLogin} />;
         }
         return <AdminDashboard />;
@@ -413,12 +413,6 @@ function AppContent() {
                     className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
                   >
                     Blog
-                  </button>
-                  <button
-                    onClick={() => { handleNavigate('pricing'); setMobileMenuOpen(false); }}
-                    className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
-                  >
-                    Pricing
                   </button>
                   <button
                     onClick={() => { handleNavigate('pricing'); setMobileMenuOpen(false); }}

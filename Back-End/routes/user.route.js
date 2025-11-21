@@ -18,4 +18,4 @@ router.post('/google-signup', googleSignup);
 // Admin login route
 router.route("/admin/login").post(adminLogin);
 
-export default router;
+export default router; 
