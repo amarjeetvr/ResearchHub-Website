@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import { logoutUser, loginUser as apiLoginUser, registerUser } from './services/api';
+import { logoutUser, loginUser as apiLoginUser, registerUser, adminLogin as apiAdminLogin } from './services/api';
 import LandingPage from './pages/LandingPage';
 import AboutPage from './pages/AboutPage';
 import BlogPage from './pages/BlogPage';
 import PricingPage from './pages/PricingPage';
 import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
+import AdminLoginPage from './pages/Auth/AdminLoginPage';
 import BiddingPage from './pages/BiddingPage';
 import MessagingPage from './pages/MessagingPage';
 import EscrowPaymentPage from './pages/EscrowPaymentPage';
@@ -19,7 +20,7 @@ import ProfileDropdown from './components/ProfileDropdown';
 import { Menu, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard';
+type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ function AppContent() {
       'pricing': '/pricing',
       'login': '/login',
       'signup': '/signup',
+      'admin-login': '/admin/login',
       'bidding': '/bidding',
       'messaging': '/messaging',
       'escrow': '/escrow',
@@ -58,6 +60,7 @@ function AppContent() {
       '/pricing': 'pricing',
       '/login': 'login',
       '/signup': 'signup',
+      '/admin': 'admin-login',
       '/bidding': 'bidding',
       '/messaging': 'messaging',
       '/escrow': 'escrow',
@@ -121,6 +124,18 @@ function AppContent() {
     }
   };
 
+  const handleAdminLogin = async (email: string, password: string) => {
+    try {
+      const response = await apiAdminLogin({ email, password });
+      if (response.success && response.user) {
+        setUser(response.user);
+        navigate('/admin-dashboard');
+      }
+    } catch (error: any) {
+      throw error; // Let AdminLoginPage handle the error
+    }
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
@@ -135,6 +150,8 @@ function AppContent() {
         return <LoginPage onLogin={handleLogin} onSwitchToSignup={() => handleNavigate('signup')} />;
       case 'signup':
         return <SignupPage onSignup={handleSignup} onSwitchToLogin={() => handleNavigate('login')} />;
+      case 'admin-login':
+        return <AdminLoginPage onAdminLogin={handleAdminLogin} />;
       case 'bidding':
         return <BiddingPage />;
       case 'messaging':
@@ -148,13 +165,18 @@ function AppContent() {
       case 'freelancer-dashboard':
         return <FreelancerDashboard />;
       case 'admin-dashboard':
+        // Protect admin dashboard - only allow access if logged in as admin
+        if (!isAuthenticated || user?.role !== 'admin') {
+          navigate('/admin');
+          return <AdminLoginPage onAdminLogin={handleAdminLogin} />;
+        }
         return <AdminDashboard />;
       default:
         return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 
-  const showNavigation = currentPage !== 'login' && currentPage !== 'signup' && currentPage !== 'admin-dashboard';
+  const showNavigation = currentPage !== 'login' && currentPage !== 'signup' && currentPage !== 'admin-login' && currentPage !== 'admin-dashboard';
 
   if (loading) {
     return (
@@ -199,12 +221,14 @@ function AppContent() {
                         Dashboard
                       </button>
                     )}
-                    <button
-                      onClick={() => handleNavigate('bidding')}
-                      className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                    >
-                      Projects
-                    </button>
+                    {user.role !== 'client' && (
+                      <button
+                        onClick={() => handleNavigate('bidding')}
+                        className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
+                      >
+                        Projects
+                      </button>
+                    )}
                     <button
                       onClick={() => handleNavigate('messaging')}
                       className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
@@ -339,12 +363,14 @@ function AppContent() {
                       Dashboard
                     </button>
                   )}
-                  <button
-                    onClick={() => { handleNavigate('bidding'); setMobileMenuOpen(false); }}
-                    className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
-                  >
-                    Projects
-                  </button>
+                  {user.role !== 'client' && (
+                    <button
+                      onClick={() => { handleNavigate('bidding'); setMobileMenuOpen(false); }}
+                      className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
+                    >
+                      Projects
+                    </button>
+                  )}
                   <button
                     onClick={() => { handleNavigate('messaging'); setMobileMenuOpen(false); }}
                     className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"

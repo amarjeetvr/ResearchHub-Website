@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, register, updateProfile, getCurrentUser } from "../controllers/user.controller.js";
+import { login, logout, register, updateProfile, getCurrentUser, adminLogin } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { singleupload } from "../middlewares/mutler.js";
 
@@ -15,5 +15,7 @@ router.route("/me").get(isAuthenticated, getCurrentUser);
 
 router.post('/google-signup', googleSignup);
 
+// Admin login route
+router.route("/admin/login").post(adminLogin);
 
 export default router;

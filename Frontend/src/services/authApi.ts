@@ -122,3 +122,26 @@ export const getCurrentUser = async () => {
   
   return data;
 };
+
+// Admin login
+export const adminLogin = async (credentials: {
+  email: string;
+  password: string;
+}) => {
+  const response = await fetch(`${API_BASE_URL}/user/admin/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(credentials),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Admin login failed');
+  }
+  
+  return data;
+};
