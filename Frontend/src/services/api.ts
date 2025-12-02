@@ -25,6 +25,8 @@ export {
   updateProfile,
   getCurrentUser,
   adminLogin,
+  getBankAccount,
+  updateBankAccount,
 } from './authApi';
 
 // Export all project APIs

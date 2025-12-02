@@ -1,11 +1,21 @@
 import { Shield, Lock, CreditCard, CheckCircle, AlertCircle, DollarSign } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { processEscrowPayment } from '../../services/projectApi';
+import toast from 'react-hot-toast';
 
 export default function EscrowPaymentPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'razorpay'>('stripe');
   const [agreed, setAgreed] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
-  const project = {
+  // Get project and bid details from navigation state
+  const { projectId, bidId, projectDetails } = location.state || {};
+
+  const project = projectDetails || {
     title: 'Statistical Analysis for Healthcare Outcomes Study',
     freelancer: 'RM',
     agreedAmount: 950,
@@ -16,6 +26,77 @@ export default function EscrowPaymentPage() {
 
   const platformCommission = project.agreedAmount * 0.1;
   const totalAmount = project.agreedAmount + platformCommission;
+
+  const handlePayment = async () => {
+    if (!projectId || !bidId) {
+      toast.error('Missing project or bid information');
+      return;
+    }
+
+    setProcessing(true);
+    
+    try {
+      // Call backend API to process payment
+      await processEscrowPayment({ projectId, bidId });
+      
+      // Show success
+      setPaymentSuccess(true);
+      toast.success('Payment processed successfully!');
+    } catch (error: any) {
+      console.error('Payment processing error:', error);
+      toast.error(error.message || 'Failed to process payment');
+      setProcessing(false);
+    }
+  };
+
+  // Show success screen after payment
+  if (paymentSuccess) {
+    return (
+      <div className="min-h-screen bg-[#F5F7FA] flex items-center justify-center px-6 py-12">
+        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-8 sm:p-12 text-center">
+          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="text-green-600" size={60} />
+          </div>
+          
+          <h1 className="text-4xl font-bold text-[#1F1F1F] mb-4">Payment Successful!</h1>
+          
+          <p className="text-xl text-gray-600 mb-8">
+            Your payment of <span className="font-bold text-[#2D6CDF]">${totalAmount.toFixed(2)}</span> has been securely deposited into escrow.
+          </p>
+          
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+            <div className="flex items-start gap-3 mb-4">
+              <Shield className="text-blue-600 flex-shrink-0 mt-1" size={24} />
+              <div className="text-left">
+                <h3 className="font-bold text-blue-900 mb-2">What Happens Next?</h3>
+                <ul className="text-sm text-blue-700 space-y-2">
+                  <li>✓ The freelancer has been notified to begin work</li>
+                  <li>✓ You can track progress in your dashboard</li>
+                  <li>✓ Funds will be released after you approve the completed work</li>
+                  <li>✓ Full refund protection if deliverables are not met</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <button
+              onClick={() => navigate('/client-dashboard')}
+              className="w-full bg-[#2D6CDF] text-white px-6 py-4 rounded-xl font-bold text-lg hover:bg-[#1F1F1F] transition-all shadow-md"
+            >
+              Go to Dashboard
+            </button>
+            <button
+              onClick={() => navigate('/messaging')}
+              className="w-full bg-gray-100 text-[#1F1F1F] px-6 py-4 rounded-xl font-bold text-lg hover:bg-gray-200 transition-all"
+            >
+              Message Freelancer
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F5F7FA] py-12">
@@ -161,15 +242,25 @@ export default function EscrowPaymentPage() {
               </div>
 
               <button
-                disabled={!agreed}
+                disabled={!agreed || processing}
+                onClick={handlePayment}
                 className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${
-                  agreed
+                  agreed && !processing
                     ? 'bg-[#2D6CDF] text-white hover:bg-[#1F1F1F] shadow-lg'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                <Lock size={20} />
-                Deposit ${totalAmount.toFixed(2)} to Escrow
+                {processing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Lock size={20} />
+                    Pay Now - ${totalAmount.toFixed(2)}
+                  </>
+                )}
               </button>
             </div>
           </div>

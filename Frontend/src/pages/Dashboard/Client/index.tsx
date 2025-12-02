@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
 import { FolderOpen, Clock, CheckCircle, MessageSquare, DollarSign, Plus, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ProjectPostingWizard from '../../../components/ProjectPostingWizard';
 import BidsList from './components/BidsList';
 import ProjectDetails from './components/ProjectDetails';
+import ProjectCompletionPopup from '../../../components/shared/ProjectCompletionPopup';
 import { getMyProjects, getProjectStats } from '../../../services/api';
+import { approveProjectCompletion } from '../../../services/projectApi';
 import toast from 'react-hot-toast';
 
 export default function ClientDashboard() {
+  const navigate = useNavigate();
   const [showPostProject, setShowPostProject] = useState(false);
   const [showBidsList, setShowBidsList] = useState(false);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [showCompletionPopup, setShowCompletionPopup] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [completedProject, setCompletedProject] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('active');
   const [projects, setProjects] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,6 +32,18 @@ export default function ClientDashboard() {
     fetchProjects();
     fetchStats();
   }, []);
+
+  useEffect(() => {
+    // Check for completed projects and show popup
+    const completedProject = projects.find(
+      (p) => p.status === 'completed' && p.progress === 100 && !p.clientApproved
+    );
+    
+    if (completedProject) {
+      setCompletedProject(completedProject);
+      setShowCompletionPopup(true);
+    }
+  }, [projects]);
 
   const fetchProjects = async () => {
     try {
@@ -71,6 +89,35 @@ export default function ClientDashboard() {
   const handleViewDetails = (project: any) => {
     setSelectedProject(project);
     setShowProjectDetails(true);
+  };
+
+  const handleApproveCompletion = async () => {
+    if (!completedProject) return;
+
+    try {
+      const response = await approveProjectCompletion(completedProject._id);
+      
+      if (response.success) {
+        toast.success('Project approved! Admin has been notified.');
+        setShowCompletionPopup(false);
+        
+        // Navigate to freelancer account details page
+        navigate('/freelancer-account-details', {
+          state: {
+            freelancerAccount: response.freelancerAccount,
+            freelancerName: completedProject.assignedFreelancer?.fullname,
+            projectTitle: completedProject.title,
+            bidAmount: getAcceptedBidAmount(completedProject),
+          },
+        });
+        
+        // Refresh projects
+        fetchProjects();
+      }
+    } catch (error: any) {
+      console.error('Approval error:', error);
+      toast.error(error.message || 'Failed to approve project');
+    }
   };
 
   const maskName = (fullname: string): string => {
@@ -392,6 +439,15 @@ export default function ClientDashboard() {
             fetchProjects();
             fetchStats();
           }}
+        />
+      )}
+
+      {showCompletionPopup && completedProject && (
+        <ProjectCompletionPopup
+          projectTitle={completedProject.title}
+          freelancerName={completedProject.assignedFreelancer?.fullname || 'Unknown'}
+          onApprove={handleApproveCompletion}
+          onClose={() => setShowCompletionPopup(false)}
         />
       )}
     </div>

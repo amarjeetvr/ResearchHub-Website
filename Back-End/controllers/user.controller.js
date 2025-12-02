@@ -324,6 +324,88 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
+// Get Bank Account Details (Freelancer only)
+export const getBankAccount = async (req, res) => {
+  try {
+    const userId = req.id;
+
+    const user = await User.findById(userId).select('bankAccount role');
+    
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false
+      });
+    }
+
+    if (user.role !== 'freelancer') {
+      return res.status(403).json({
+        message: "Only freelancers can access bank account details",
+        success: false
+      });
+    }
+
+    return res.status(200).json({
+      bankAccount: user.bankAccount || {},
+      success: true
+    });
+  } catch (error) {
+    console.error("Get bank account error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false
+    });
+  }
+};
+
+// Update Bank Account Details (Freelancer only)
+export const updateBankAccount = async (req, res) => {
+  try {
+    const userId = req.id;
+    const { accountHolderName, bankName, accountNumber, ifscCode, accountType, upiId } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false
+      });
+    }
+
+    if (user.role !== 'freelancer') {
+      return res.status(403).json({
+        message: "Only freelancers can update bank account details",
+        success: false
+      });
+    }
+
+    // Update bank account details
+    user.bankAccount = {
+      accountHolderName: accountHolderName || user.bankAccount?.accountHolderName || "",
+      bankName: bankName || user.bankAccount?.bankName || "",
+      accountNumber: accountNumber || user.bankAccount?.accountNumber || "",
+      ifscCode: ifscCode || user.bankAccount?.ifscCode || "",
+      accountType: accountType || user.bankAccount?.accountType || "",
+      upiId: upiId || user.bankAccount?.upiId || ""
+    };
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Bank account details updated successfully",
+      bankAccount: user.bankAccount,
+      success: true
+    });
+  } catch (error) {
+    console.error("Update bank account error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false
+    });
+  }
+};
+
 // Admin Login with credentials from environment variables
 export const adminLogin = async (req, res) => {
   try {

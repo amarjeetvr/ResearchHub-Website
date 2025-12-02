@@ -4,6 +4,7 @@ import StatsOverview from './components/StatsOverview';
 import RecentUsersCard from './components/RecentUsersCard';
 import PlatformActivityCard from './components/PlatformActivityCard';
 import RecentProjectsTable from './components/RecentProjectsTable';
+import AdminProjectsTable from './components/AdminProjectsTable';
 import UserManagementTable from './components/UserManagementTable';
 import VerificationWorkflow from './components/VerificationWorkflow';
 import DisputeResolution from './components/DisputeResolution';
@@ -38,6 +39,9 @@ export default function AdminDashboard() {
       case 'users':
         return <UserManagementTable users={RECENT_USERS} />;
 
+      case 'projects':
+        return <AdminProjectsTable />;
+
       case 'verifications':
         return <VerificationWorkflow verifications={PENDING_VERIFICATIONS} />;
 
@@ -63,6 +67,7 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-[#1F1F1F] mb-8">
             {activeTab === 'overview' && 'Dashboard Overview'}
             {activeTab === 'users' && 'User Management'}
+            {activeTab === 'projects' && 'Payment Management'}
             {activeTab === 'verifications' && 'Verification Requests'}
             {activeTab === 'disputes' && 'Dispute Resolution'}
             {activeTab === 'skills' && 'Skills Management'}

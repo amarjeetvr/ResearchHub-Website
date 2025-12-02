@@ -79,17 +79,25 @@ const projectSchema = new mongoose.Schema(
         default: "pending",
       },
     }],
-    progress: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
-    },
-    completedAt: {
-      type: Date,
-    },
+  progress: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100,
   },
-  { timestamps: true }
+  completedAt: {
+    type: Date,
+  },
+  clientApproved: {
+    type: Boolean,
+    default: false,
+  },
+  paymentReleased: {
+    type: Boolean,
+    default: false,
+  },
+},
+{ timestamps: true }
 );
 
 export const Project = mongoose.model("Project", projectSchema);

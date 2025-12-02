@@ -35,6 +35,34 @@ const userSchema = new mongoose.Schema({
   profilePhoto: {
     type: String,
     default: ""
+  },
+  // Bank Account Details (for freelancers only)
+  bankAccount: {
+    accountHolderName: {
+      type: String,
+      default: ""
+    },
+    bankName: {
+      type: String,
+      default: ""
+    },
+    accountNumber: {
+      type: String,
+      default: ""
+    },
+    ifscCode: {
+      type: String,
+      default: ""
+    },
+    accountType: {
+      type: String,
+      enum: ["", "savings", "current"],
+      default: ""
+    },
+    upiId: {
+      type: String,
+      default: ""
+    }
   }
 }, { timestamps: true });
 

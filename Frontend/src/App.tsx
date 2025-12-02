@@ -13,14 +13,16 @@ import BiddingPage from './pages/BiddingPage';
 import MessagingPage from './pages/MessagingPage';
 import EscrowPaymentPage from './pages/EscrowPaymentPage';
 import VerificationCertificationPage from './pages/VerificationCertificationPage';
+import FreelancerAccountDetailsPage from './pages/FreelancerAccountDetailsPage';
 import ClientDashboard from './pages/Dashboard/Client';
 import FreelancerDashboard from './pages/Dashboard/Freelancer';
 import AdminDashboard from './pages/Dashboard/Admin/AdminDashboard';
 import ProfileDropdown from './components/ProfileDropdown';
+import ProfileViewPopup from './components/shared/ProfileViewPopup';
 import { Menu, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard';
+type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'freelancer-account-details' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ function AppContent() {
   const { user, loading, setUser, refreshUser, isAuthenticated } = useAuth();
   const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
 
   // Handle navigation with URL updates
   const handleNavigate = (page: PageType) => {
@@ -44,6 +47,7 @@ function AppContent() {
       'messaging': '/messaging',
       'escrow': '/escrow',
       'verification': '/verification',
+      'freelancer-account-details': '/freelancer-account-details',
       'client-dashboard': '/client-dashboard',
       'freelancer-dashboard': '/freelancer-dashboard',
       'admin-dashboard': '/admin-dashboard'
@@ -60,11 +64,12 @@ function AppContent() {
       '/pricing': 'pricing',
       '/login': 'login',
       '/signup': 'signup',
-      '/admin/login': 'admin-login',
+      '/admin': 'admin-login',
       '/bidding': 'bidding',
       '/messaging': 'messaging',
       '/escrow': 'escrow',
       '/verification': 'verification',
+      '/freelancer-account-details': 'freelancer-account-details',
       '/client-dashboard': 'client-dashboard',
       '/freelancer-dashboard': 'freelancer-dashboard',
       '/admin-dashboard': 'admin-dashboard'
@@ -103,9 +108,10 @@ function AppContent() {
       await refreshUser();
       // User state will be updated by refreshUser, then redirect
       if (data.role === 'client') {
-        navigate('/client-dashboard');
+      
+        navigate('/login');
       } else {
-        navigate('/freelancer-dashboard');
+        navigate('/login');
       }
     } catch (error: any) {
       throw error; // Let SignupPage handle the error
@@ -160,6 +166,8 @@ function AppContent() {
         return <EscrowPaymentPage />;
       case 'verification':
         return <VerificationCertificationPage />;
+      case 'freelancer-account-details':
+        return <FreelancerAccountDetailsPage />;
       case 'client-dashboard':
         return <ClientDashboard />;
       case 'freelancer-dashboard':
@@ -286,13 +294,7 @@ function AppContent() {
               <div className="hidden md:flex items-center gap-3 lg:gap-4">
                 {isAuthenticated && user ? (
                   <ProfileDropdown
-                    onViewProfile={() => {
-                      if (user.role === 'client') {
-                        handleNavigate('client-dashboard');
-                      } else {
-                        handleNavigate('freelancer-dashboard');
-                      }
-                    }}
+                    onViewProfile={() => setShowProfilePopup(true)}
                     onLogout={handleLogout}
                   />
                 ) : (
@@ -382,11 +384,7 @@ function AppContent() {
 
                   <button
                     onClick={() => { 
-                      if (user.role === 'client') {
-                        handleNavigate('client-dashboard');
-                      } else {
-                        handleNavigate('freelancer-dashboard');
-                      }
+                      setShowProfilePopup(true);
                       setMobileMenuOpen(false); 
                     }}
                     className="block w-full text-left py-3 text-[#1F1F1F] hover:text-blue-600 font-medium"
@@ -446,6 +444,11 @@ function AppContent() {
       )}
 
       {renderPage()}
+
+      {/* Profile View Popup */}
+      {showProfilePopup && (
+        <ProfileViewPopup onClose={() => setShowProfilePopup(false)} />
+      )}
     </>
   );
 }

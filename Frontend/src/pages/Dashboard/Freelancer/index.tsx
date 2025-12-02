@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X, Eye } from 'lucide-react';
 import { getAllProjects, submitBid, getMyProposals, getMyActiveProjects, getMyCompletedProjects, getFreelancerStats } from '../../../services/api';
 import FreelancerProjectDetails from './components/FreelancerProjectDetails';
+import ProfileViewPopup from '../../../components/shared/ProfileViewPopup';
 import toast from 'react-hot-toast';
 
 export default function FreelancerDashboard() {
@@ -22,6 +23,7 @@ export default function FreelancerDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showProposalModal, setShowProposalModal] = useState(false);
   const [showProjectDetails, setShowProjectDetails] = useState(false);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [selectedProposal, setSelectedProposal] = useState<any>(null);
   const [submittingProposal, setSubmittingProposal] = useState(false);
@@ -211,24 +213,7 @@ export default function FreelancerDashboard() {
 
   return (
     <div className="min-h-screen bg-[#F5F7FA]">
-      <div className="bg-white border-b border-gray-200">
-        {/* <div className="max-w-[1600px] mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-[#1F1F1F] mb-2">Freelancer Dashboard</h1>
-              <p className="text-gray-600">Manage your projects and grow your research career</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button className="border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-3 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all">
-                Browse Projects
-              </button>
-              <button className="bg-[#2D6CDF] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all shadow-md">
-                Update Profile
-              </button>
-            </div>
-          </div>
-        </div> */}
-      </div>
+     
 
       <div className="max-w-[1600px] mx-auto px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -397,14 +382,53 @@ export default function FreelancerDashboard() {
                           <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-green-100 text-green-700">
                             COMPLETED
                           </span>
+                          {project.clientApproved && (
+                            <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-100 text-blue-700 flex items-center gap-1">
+                              <CheckCircle size={14} />
+                              CLIENT APPROVED
+                            </span>
+                          )}
+                          {project.paymentReleased && (
+                            <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-700 flex items-center gap-1">
+                              <DollarSign size={14} />
+                              PAYMENT RELEASED
+                            </span>
+                          )}
                         </div>
                         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                        
+                        {/* Payment Status Info */}
+                        {project.clientApproved && !project.paymentReleased && (
+                          <div className="mt-3 bg-amber-50 border-l-4 border-amber-400 p-3 rounded">
+                            <p className="text-sm text-amber-800 font-medium">
+                              ⏳ Payment in process - Admin will release payment soon
+                            </p>
+                          </div>
+                        )}
+                        {project.paymentReleased && (
+                          <div className="mt-3 bg-emerald-50 border-l-4 border-emerald-400 p-3 rounded">
+                            <p className="text-sm text-emerald-800 font-medium">
+                              ✓ Payment has been released to your account
+                            </p>
+                            <p className="text-xs text-emerald-700 mt-1">
+                              Funds should arrive in 3-5 business days
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <div className="text-right ml-4">
                         <div className="text-sm text-gray-500">Earned</div>
                         <div className="text-2xl font-bold text-green-600">
                           ${project.bids?.find((b: any) => b.status === 'accepted')?.amount || 0}
                         </div>
+                        {project.paymentReleased && (
+                          <div className="mt-2">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-600 text-white">
+                              <CheckCircle size={12} className="mr-1" />
+                              Paid
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -596,6 +620,11 @@ export default function FreelancerDashboard() {
           onClose={handleCloseProjectDetails}
           onProjectUpdate={fetchAllData}
         />
+      )}
+
+      {/* Profile View Popup */}
+      {showProfilePopup && (
+        <ProfileViewPopup onClose={() => setShowProfilePopup(false)} />
       )}
     </div>
   );

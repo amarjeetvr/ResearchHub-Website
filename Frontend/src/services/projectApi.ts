@@ -313,3 +313,61 @@ export const updateProjectProgress = async (projectId: string, progress: number)
   
   return data;
 };
+
+// Process escrow payment after client clicks "Pay Now"
+export const processEscrowPayment = async (paymentData: {
+  projectId: string;
+  bidId: string;
+}) => {
+  const response = await fetch(`${API_BASE_URL}/project/escrow/process-payment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(paymentData),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to process payment');
+  }
+  
+  return data;
+};
+
+// Client approves completed project
+export const approveProjectCompletion = async (projectId: string) => {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/approve-completion`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to approve project');
+  }
+  
+  return data;
+};
+
+// Get admin projects
+export const getAdminProjects = async () => {
+  const response = await fetch(`${API_BASE_URL}/project/admin-projects`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch admin projects');
+  }
+  
+  return data;
+};

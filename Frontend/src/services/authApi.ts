@@ -145,3 +145,46 @@ export const adminLogin = async (credentials: {
   
   return data;
 };
+
+// Get Bank Account Details (Freelancer only)
+export const getBankAccount = async () => {
+  const response = await fetch(`${API_BASE_URL}/user/bank-account`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch bank account');
+  }
+  
+  return data;
+};
+
+// Update Bank Account Details (Freelancer only)
+export const updateBankAccount = async (bankData: {
+  accountHolderName: string;
+  bankName: string;
+  accountNumber: string;
+  ifscCode: string;
+  accountType: string;
+  upiId: string;
+}) => {
+  const response = await fetch(`${API_BASE_URL}/user/bank-account/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(bankData),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update bank account');
+  }
+  
+  return data;
+};

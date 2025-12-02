@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, User, DollarSign, Calendar, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { getProjectById, acceptBid, rejectBid } from '../../../../services/api';
 import toast from 'react-hot-toast';
 
@@ -48,6 +49,8 @@ export default function BidsList({ projectId, projectTitle, onClose, onBidAccept
     }
   };
 
+  const navigate = useNavigate();
+
   const handleAcceptBid = async (bidId: string) => {
     if (!confirm('Are you sure you want to accept this bid? All other bids will be rejected.')) {
       return;
@@ -57,9 +60,24 @@ export default function BidsList({ projectId, projectTitle, onClose, onBidAccept
       setAcceptingBidId(bidId);
       const response = await acceptBid(projectId, bidId);
       if (response.success) {
-        toast.success('Bid accepted successfully!');
+        toast.success('Bid accepted! Please proceed to payment.');
         onBidAccepted();
         onClose();
+        
+        // Redirect to escrow payment page with project and bid details
+        if (response.redirectTo && response.escrowData) {
+          navigate(response.redirectTo, {
+            state: {
+              projectId: response.escrowData.projectId,
+              bidId: response.escrowData.bidId,
+              projectDetails: {
+                title: response.escrowData.projectTitle,
+                freelancer: response.escrowData.freelancerName,
+                agreedAmount: response.escrowData.agreedAmount,
+              },
+            },
+          });
+        }
       }
     } catch (error: any) {
       toast.error(error.message || 'Failed to accept bid');
