@@ -28,8 +28,14 @@ export default function SearchResultsSection({
               </p>
             </div>
             <button
-              onClick={onClearSearch}
-              className="flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-[#2D6CDF] transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Clear Search button clicked');
+                onClearSearch();
+              }}
+              className="flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-[#2D6CDF] transition-colors cursor-pointer z-10 relative"
+              type="button"
             >
               <X size={20} />
               <span>Clear Search</span>
@@ -42,8 +48,13 @@ export default function SearchResultsSection({
               <span className="inline-flex items-center gap-2 bg-[#2D6CDF] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold">
                 {selectedCategory}
                 <button
-                  onClick={onClearCategory}
-                  className="hover:bg-white/20 rounded-full p-0.5"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Clear Category button clicked');
+                    onClearCategory();
+                  }}
+                  className="hover:bg-white/20 rounded-full p-0.5 cursor-pointer"
                 >
                   <X size={14} />
                 </button>
@@ -136,8 +147,14 @@ export default function SearchResultsSection({
               <h3 className="text-xl sm:text-2xl font-bold text-[#1F1F1F] mb-2">No experts found</h3>
               <p className="text-sm sm:text-base text-gray-600 mb-6">Try adjusting your search criteria or browse all categories</p>
               <button
-                onClick={onClearSearch}
-                className="bg-[#2D6CDF] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Clear Filters button clicked');
+                  onClearSearch();
+                }}
+                className="bg-[#2D6CDF] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all cursor-pointer z-10 relative"
+                type="button"
               >
                 Clear Filters
               </button>

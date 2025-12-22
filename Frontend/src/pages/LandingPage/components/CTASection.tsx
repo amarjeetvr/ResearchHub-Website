@@ -15,7 +15,7 @@ export default function CTASection({ onNavigate }: CTASectionProps) {
           Join the global research innovation economy. Connect with verified experts or find meaningful projects today.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-          <button className="bg-gradient-to-r from-[#0284C7] to-[#0B3C9D] px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-[#F5F7FA] transition-all shadow-xl">
+          <button className="bg-gradient-to-r text-white from-[#0284C7] to-[#0B3C9D] px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-[#F5F7FA] transition-all shadow-xl">
             Hire a Researcher
           </button>
           <button

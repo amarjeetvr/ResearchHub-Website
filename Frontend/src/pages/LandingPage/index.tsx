@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ALL_FREELANCERS } from '../../utils/constants';
 import HeroSection from './components/HeroSection';
 import SearchSection from './components/SearchSection';
@@ -28,6 +28,16 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
     setShowResults(true);
   };
 
+  useEffect(() => {
+    if (showResults) {
+      // Scroll to results section smoothly
+      window.scrollTo({ top: 600, behavior: 'smooth' });
+    } else {
+      // Scroll back to top when results are cleared
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showResults]);
+
   const filteredFreelancers = ALL_FREELANCERS.filter(freelancer => {
     const matchesCategory = !selectedCategory || freelancer.categories.includes(selectedCategory);
     const matchesSearch = !searchQuery ||
@@ -39,6 +49,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
   });
 
   const handleClearSearch = () => {
+    console.log('Clear search clicked');
     setShowResults(false);
     setSearchQuery('');
     setSelectedCategory('');

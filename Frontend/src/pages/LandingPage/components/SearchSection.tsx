@@ -38,11 +38,10 @@ export default function SearchSection({ searchQuery, setSearchQuery, onSearch }:
             />
             <motion.button
               onClick={onSearch}
-              className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-md sm:rounded-lg text-sm sm:text-base font-semibold transition-all flex items-center gap-1 sm:gap-2 shadow-lg"
-              whileHover={{ scale: 1.05, backgroundColor: '#1e40af' }}
-              whileTap={{ scale: 0.95 }}
+              className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-md sm:rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-1 sm:gap-2 shadow-lg"
+              whileHover={{ backgroundColor: '#1e40af' }}
             >
-              <span className="hidden sm:inline">Search</span>
+              <span>Search</span>
               <ChevronRight size={16} className="sm:w-5 sm:h-5" />
             </motion.button>
             <AnimatePresence>
