@@ -1,7 +1,17 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    console.log('Navigating to:', path);
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="bg-[#1F1F1F] text-white py-12 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-[#1F1F1F] text-white py-12 sm:py-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
           <div>
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Platform</h3>
@@ -36,10 +46,37 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Legal</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Use</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Academic Integrity</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Escrow Terms</a></li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/terms-and-conditions')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Terms & Conditions
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/privacy-policy')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Privacy Policy
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/academic-integrity-policy')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Academic Integrity Policy
+                </button>
+              </li>
+              <li><a href="#" className="hover:text-white transition-colors cursor-pointer hover:underline">Escrow Terms</a></li>
             </ul>
           </div>
         </div>

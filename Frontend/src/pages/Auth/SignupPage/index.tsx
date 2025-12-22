@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, Briefcase, GraduationCap, Phone } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { googleSignup } from '../../../services/api';
@@ -283,7 +284,31 @@ export default function SignupPage({ onSignup, onSwitchToLogin }: SignupPageProp
                   className="mt-1 w-4 h-4 text-[#2D6CDF] border-gray-300 rounded focus:ring-[#2D6CDF]"
                 />
                 <span className="ml-3 text-sm text-gray-700">
-                  I agree to the <span className="text-[#2D6CDF] font-semibold">Terms & Conditions</span>, <span className="text-[#2D6CDF] font-semibold">Privacy Policy</span>, and <span className="text-[#2D6CDF] font-semibold">Academic Integrity Policy</span>. I understand that my identity will be anonymized on the platform.
+                  I agree to the{' '}
+                  <Link 
+                    to="/terms-and-conditions" 
+                    className="text-[#2D6CDF] font-semibold hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Terms & Conditions
+                  </Link>
+                  ,{' '}
+                  <Link 
+                    to="/privacy-policy" 
+                    className="text-[#2D6CDF] font-semibold hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Privacy Policy
+                  </Link>
+                  , and{' '}
+                  <Link 
+                    to="/academic-integrity-policy" 
+                    className="text-[#2D6CDF] font-semibold hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Academic Integrity Policy
+                  </Link>
+                  . I understand that my identity will be anonymized on the platform.
                 </span>
               </label>
             </div>
