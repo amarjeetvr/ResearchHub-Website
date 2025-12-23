@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X, Eye } from 'lucide-react';
+import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X, Eye, MessageCircle } from 'lucide-react';
 import { getAllProjects, submitBid, getMyProposals, getMyActiveProjects, getMyCompletedProjects, getFreelancerStats } from '../../../services/api';
 import FreelancerProjectDetails from './components/FreelancerProjectDetails';
 import ProfileViewPopup from '../../../components/shared/ProfileViewPopup';
@@ -312,6 +312,13 @@ export default function FreelancerDashboard() {
                       >
                         <Eye size={18} />
                         View Details
+                      </button>
+                      <button 
+                        onClick={() => navigate('/messages', { state: { projectId: project._id, clientId: project.clientId?._id } })}
+                        className="bg-white border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all inline-flex items-center gap-2"
+                      >
+                        <MessageCircle size={18} />
+                        Chat
                       </button>
                     </div>
                   </div>
