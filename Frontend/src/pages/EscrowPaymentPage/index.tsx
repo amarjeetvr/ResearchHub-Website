@@ -1,6 +1,6 @@
 import { Shield, Lock, CreditCard, CheckCircle, AlertCircle, DollarSign } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { processEscrowPayment } from '../../services/projectApi';
 import toast from 'react-hot-toast';
 
@@ -248,7 +248,7 @@ export default function EscrowPaymentPage() {
                     className="mt-1 w-5 h-5 text-[#2D6CDF] border-gray-300 rounded focus:ring-[#2D6CDF]"
                   />
                   <span className="ml-3 text-sm text-gray-700">
-                    I agree to the <span className="text-[#2D6CDF] font-semibold">Escrow Service Terms</span> and understand that funds will be held securely until I approve the completed work.
+                    I agree to the <Link to="/escrow-service-terms" className="text-[#2D6CDF] font-semibold hover:underline">Escrow Service Terms</Link> and understand that funds will be held securely until I approve the completed work.
                   </span>
                 </label>
               </div>

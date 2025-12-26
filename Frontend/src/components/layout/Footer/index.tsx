@@ -76,7 +76,16 @@ export default function Footer() {
                   Academic Integrity Policy
                 </button>
               </li>
-              <li><a href="#" className="hover:text-white transition-colors cursor-pointer hover:underline">Escrow Terms</a></li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/escrow-service-terms')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Escrow Service Terms
+                </button>
+              </li>
             </ul>
           </div>
         </div>

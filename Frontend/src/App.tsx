@@ -20,11 +20,12 @@ import AdminDashboard from './pages/Dashboard/Admin/AdminDashboard';
 import TermsAndConditions from './pages/Policies/TermsAndConditions';
 import PrivacyPolicy from './pages/Policies/PrivacyPolicy';
 import AcademicIntegrity from './pages/Policies/AcademicIntegrity';
+import EscrowServiceTerms from './pages/Policies/EscrowServiceTerms';
 import Navbar from './components/layout/Navbar';
 import ProfileViewPopup from './components/shared/ProfileViewPopup';
 import toast from 'react-hot-toast';
 
-type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'freelancer-account-details' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard' | 'terms-and-conditions' | 'privacy-policy' | 'academic-integrity-policy';
+type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'freelancer-account-details' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard' | 'terms-and-conditions' | 'privacy-policy' | 'academic-integrity-policy' | 'escrow-service-terms';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -54,7 +55,8 @@ function AppContent() {
       'admin-dashboard': '/admin-dashboard',
       'terms-and-conditions': '/terms-and-conditions',
       'privacy-policy': '/privacy-policy',
-      'academic-integrity-policy': '/academic-integrity-policy'
+      'academic-integrity-policy': '/academic-integrity-policy',
+      'escrow-service-terms': '/escrow-service-terms'
     };
     navigate(routes[page]);
   };
@@ -79,7 +81,8 @@ function AppContent() {
       '/admin-dashboard': 'admin-dashboard',
       '/terms-and-conditions': 'terms-and-conditions',
       '/privacy-policy': 'privacy-policy',
-      '/academic-integrity-policy': 'academic-integrity-policy'
+      '/academic-integrity-policy': 'academic-integrity-policy',
+      '/escrow-service-terms': 'escrow-service-terms'
     };
     
     // Handle dynamic routes
@@ -192,12 +195,14 @@ function AppContent() {
         return <PrivacyPolicy />;
       case 'academic-integrity-policy':
         return <AcademicIntegrity />;
+      case 'escrow-service-terms':
+        return <EscrowServiceTerms />;
       default:
         return <LandingPage onNavigate={handleNavigate} />;
     }
   };
 
-  const showNavigation = currentPage !== 'login' && currentPage !== 'signup' && currentPage !== 'admin-login' && currentPage !== 'admin-dashboard' && currentPage !== 'terms-and-conditions' && currentPage !== 'privacy-policy' && currentPage !== 'academic-integrity-policy';
+  const showNavigation = currentPage !== 'login' && currentPage !== 'signup' && currentPage !== 'admin-login' && currentPage !== 'admin-dashboard' && currentPage !== 'terms-and-conditions' && currentPage !== 'privacy-policy' && currentPage !== 'academic-integrity-policy' && currentPage !== 'escrow-service-terms';
 
   if (loading) {
     return (
