@@ -387,13 +387,13 @@ export default function FreelancerDashboard() {
                           <span className="text-sm text-gray-600">
                             Completed {formatDate(project.completedAt)}
                           </span>
-                          <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-green-100 text-green-700">
-                            COMPLETED
-                          </span>
-                          {project.clientApproved && (
-                            <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-100 text-blue-700 flex items-center gap-1">
-                              <CheckCircle size={14} />
-                              CLIENT APPROVED
+                          {project.clientApproved ? (
+                            <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-green-100 text-green-700">
+                              COMPLETED
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-yellow-100 text-yellow-700">
+                              AWAITING CLIENT APPROVAL
                             </span>
                           )}
                           {project.paymentReleased && (

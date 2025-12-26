@@ -291,6 +291,7 @@ export default function FreelancerProjectDetails({ project, proposal, onClose, o
           projectTitle={project.title}
           onProgressUpdated={() => {
             setShowProgressModal(false);
+            onClose(); // Close the parent project details modal as well
             if (onProjectUpdate) {
               onProjectUpdate();
             }

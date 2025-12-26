@@ -294,49 +294,49 @@ export const generatePaymentReleasePDF = async ({
         .font("Helvetica-Bold")
         .text("ResearchHub", { align: "center" });
 
-      doc.moveDown(0.5);
+      doc.moveDown(0.3);
       doc
-        .fontSize(12)
+        .fontSize(11)
         .fillColor("#666666")
         .font("Helvetica")
         .text("Payment Release Confirmation", { align: "center" });
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Main Title
       doc
-        .fontSize(24)
+        .fontSize(20)
         .fillColor("#1F1F1F")
         .font("Helvetica-Bold")
         .text("Payment Released", { align: "center" });
 
-      doc.moveDown(0.5);
+      doc.moveDown(0.3);
       doc
-        .fontSize(16)
+        .fontSize(14)
         .fillColor("#28a745")
         .text("Transaction Completed Successfully", { align: "center" });
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Divider line
       doc
         .strokeColor("#28a745")
-        .lineWidth(2)
+        .lineWidth(1)
         .moveTo(50, doc.y)
         .lineTo(545, doc.y)
         .stroke();
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Transaction ID
       doc
-        .fontSize(10)
+        .fontSize(9)
         .fillColor("#666666")
         .font("Helvetica")
         .text(`Transaction ID: ${transactionId || `TXN${Date.now()}`}`, {
           align: "right",
         });
-      doc.moveDown();
+      doc.moveDown(0.3);
       doc.text(
         `Date: ${new Date().toLocaleDateString("en-US", {
           year: "numeric",
@@ -346,112 +346,106 @@ export const generatePaymentReleasePDF = async ({
         { align: "right" }
       );
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Content
-      doc.fontSize(12).fillColor("#333333").font("Helvetica");
+      doc.fontSize(11).fillColor("#333333").font("Helvetica");
 
       doc.text(`Dear ${freelancerName},`, { align: "left" });
-      doc.moveDown();
+      doc.moveDown(0.5);
 
       doc.text(
         `This document confirms that the payment for your completed project has been successfully released from escrow.`,
         { align: "left" }
       );
-      doc.moveDown(1.5);
+      doc.moveDown(1);
 
       // Project Details Box
       const boxY = doc.y;
       doc
-        .rect(50, boxY, 495, 120)
+        .rect(50, boxY, 495, 90)
         .fillAndStroke("#d4edda", "#28a745")
         .fill();
 
-      doc.fillColor("#1F1F1F").font("Helvetica-Bold").fontSize(14);
-      doc.text("Project Information", 70, boxY + 20);
+      doc.fillColor("#1F1F1F").font("Helvetica-Bold").fontSize(12);
+      doc.text("Project Information", 70, boxY + 15);
 
-      doc.fillColor("#333333").font("Helvetica").fontSize(11);
-      doc.text(`Project Title:`, 70, boxY + 45);
-      doc.font("Helvetica-Bold").text(projectTitle, 170, boxY + 45, {
+      doc.fillColor("#333333").font("Helvetica").fontSize(10);
+      doc.text(`Project Title:`, 70, boxY + 35);
+      doc.font("Helvetica-Bold").text(projectTitle, 170, boxY + 35, {
         width: 360,
       });
 
-      doc.font("Helvetica").text(`Client Name:`, 70, boxY + 65);
-      doc.font("Helvetica-Bold").text(clientName, 170, boxY + 65);
+      doc.font("Helvetica").text(`Client Name:`, 70, boxY + 52);
+      doc.font("Helvetica-Bold").text(clientName, 170, boxY + 52);
 
-      doc.font("Helvetica").text(`Freelancer:`, 70, boxY + 85);
-      doc.font("Helvetica-Bold").text(freelancerName, 170, boxY + 85);
+      doc.font("Helvetica").text(`Freelancer:`, 70, boxY + 69);
+      doc.font("Helvetica-Bold").text(freelancerName, 170, boxY + 69);
 
-      doc.moveDown(10);
+      doc.moveDown(7);
 
       // Payment Amount - Large and prominent
       doc
-        .fontSize(18)
+        .fontSize(14)
         .fillColor("#1F1F1F")
         .font("Helvetica-Bold")
         .text("Payment Amount:", { align: "center" });
       doc
-        .fontSize(36)
+        .fontSize(28)
         .fillColor("#28a745")
         .text(`$${amount}`, { align: "center" });
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Bank Account Details Box (if provided)
       if (bankAccount) {
         const accountBoxY = doc.y;
         doc
-          .rect(50, accountBoxY, 495, 140)
+          .rect(50, accountBoxY, 495, 100)
           .fillAndStroke("#f8f9fa", "#dee2e6")
           .stroke();
 
-        doc.fillColor("#1F1F1F").font("Helvetica-Bold").fontSize(13);
-        doc.text("Payment Details", 70, accountBoxY + 20);
+        doc.fillColor("#1F1F1F").font("Helvetica-Bold").fontSize(11);
+        doc.text("Payment Details", 70, accountBoxY + 12);
 
-        doc.fillColor("#333333").font("Helvetica").fontSize(11);
+        doc.fillColor("#333333").font("Helvetica").fontSize(10);
 
+        let yPos = accountBoxY + 32;
         if (bankAccount.bankName) {
-          doc.text(`Bank Name:`, 70, accountBoxY + 45);
-          doc.font("Helvetica-Bold").text(bankAccount.bankName, 200, accountBoxY + 45);
+          doc.text(`Bank Name:`, 70, yPos);
+          doc.font("Helvetica-Bold").text(bankAccount.bankName, 180, yPos);
+          yPos += 17;
         }
 
         if (bankAccount.accountHolderName) {
-          doc.font("Helvetica").text(`Account Holder:`, 70, accountBoxY + 65);
-          doc
-            .font("Helvetica-Bold")
-            .text(bankAccount.accountHolderName, 200, accountBoxY + 65);
+          doc.font("Helvetica").text(`Account Holder:`, 70, yPos);
+          doc.font("Helvetica-Bold").text(bankAccount.accountHolderName, 180, yPos);
+          yPos += 17;
         }
 
         if (bankAccount.accountNumber) {
-          doc.font("Helvetica").text(`Account Number:`, 70, accountBoxY + 85);
-          doc
-            .font("Helvetica-Bold")
-            .text(
-              "****" + bankAccount.accountNumber.slice(-4),
-              200,
-              accountBoxY + 85
-            );
+          doc.font("Helvetica").text(`Account Number:`, 70, yPos);
+          doc.font("Helvetica-Bold").text("****" + bankAccount.accountNumber.slice(-4), 180, yPos);
+          yPos += 17;
         }
 
         if (bankAccount.accountType) {
-          doc.font("Helvetica").text(`Account Type:`, 70, accountBoxY + 105);
-          doc
-            .font("Helvetica-Bold")
-            .text(bankAccount.accountType, 200, accountBoxY + 105);
+          doc.font("Helvetica").text(`Account Type:`, 70, yPos);
+          doc.font("Helvetica-Bold").text(bankAccount.accountType, 180, yPos);
         }
 
-        doc.moveDown(11);
+        doc.moveDown(8);
       }
 
       // Payment Timeline
       doc
         .fillColor("#1F1F1F")
         .font("Helvetica-Bold")
-        .fontSize(13)
+        .fontSize(11)
         .text("Payment Timeline:", { align: "left" });
-      doc.moveDown(0.5);
+      doc.moveDown(0.3);
 
-      doc.fillColor("#333333").font("Helvetica").fontSize(11);
+      doc.fillColor("#333333").font("Helvetica").fontSize(10);
       const timeline = [
         "✓ Payment released from secure escrow",
         "✓ Transfer initiated to your registered bank account",
@@ -461,20 +455,20 @@ export const generatePaymentReleasePDF = async ({
 
       timeline.forEach((item) => {
         doc.text(item, 70, doc.y, { width: 475 });
-        doc.moveDown(0.4);
+        doc.moveDown(0.2);
       });
 
-      doc.moveDown(1.5);
+      doc.moveDown(0.8);
 
       // Important Notes
       doc
         .fillColor("#1F1F1F")
         .font("Helvetica-Bold")
-        .fontSize(13)
+        .fontSize(11)
         .text("Important Notes:", { align: "left" });
-      doc.moveDown(0.5);
+      doc.moveDown(0.3);
 
-      doc.fillColor("#333333").font("Helvetica").fontSize(11);
+      doc.fillColor("#333333").font("Helvetica").fontSize(10);
       const notes = [
         "This payment is final and cannot be reversed.",
         "Please verify the payment receipt in your bank account.",
@@ -484,24 +478,24 @@ export const generatePaymentReleasePDF = async ({
 
       notes.forEach((note) => {
         doc.text(`• ${note}`, 70, doc.y, { width: 475 });
-        doc.moveDown(0.3);
+        doc.moveDown(0.2);
       });
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       // Footer message
       doc
-        .fontSize(11)
+        .fontSize(10)
         .fillColor("#666666")
         .text(
           "Thank you for your excellent work and for being a valued member of the ResearchHub community. We look forward to working with you on future projects!",
           { align: "left", width: 495 }
         );
 
-      doc.moveDown(2);
+      doc.moveDown(1);
 
       doc
-        .fontSize(10)
+        .fontSize(9)
         .fillColor("#333333")
         .text("Best regards,", { align: "left" });
       doc
@@ -509,7 +503,7 @@ export const generatePaymentReleasePDF = async ({
         .text("The ResearchHub Team", { align: "left" });
 
       // Bottom border
-      doc.moveDown(3);
+      doc.moveDown(1.5);
       doc
         .strokeColor("#CCCCCC")
         .lineWidth(1)

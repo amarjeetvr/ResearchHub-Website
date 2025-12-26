@@ -119,6 +119,7 @@ export const getMyCompletedProjects = async (req, res) => {
     const projects = await Project.find({
       assignedFreelancer: freelancerId,
       status: "completed",
+      clientApproved: true,
     })
       .populate("clientId", "fullname email profilePhoto")
       .sort({ completedAt: -1 });
@@ -169,20 +170,23 @@ export const getFreelancerStats = async (req, res) => {
       )
     ).length;
 
-    // Count completed projects
+    // Count completed projects (approved by client)
     const completedProjects = await Project.countDocuments({
       assignedFreelancer: freelancerId,
       status: "completed",
+      clientApproved: true,
     });
 
-    // Calculate total earned from accepted bids in completed projects
-    const completed = await Project.find({
+    // Calculate total earned from completed AND payment-released projects
+    const completedWithPayment = await Project.find({
       assignedFreelancer: freelancerId,
       status: "completed",
+      clientApproved: true,
+      paymentReleased: true,
     });
 
     let totalEarned = 0;
-    completed.forEach((project) => {
+    completedWithPayment.forEach((project) => {
       const acceptedBid = project.bids.find(
         (bid) =>
           bid.freelancerId.toString() === freelancerId &&

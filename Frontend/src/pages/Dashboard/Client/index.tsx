@@ -360,7 +360,10 @@ export default function ClientDashboard() {
                       </>
                     )}
                     {project.status === 'completed' && (
-                      <button className="border-2 border-gray-300 text-gray-700 px-6 py-2.5 rounded-xl font-semibold hover:bg-gray-50 transition-all">
+                      <button 
+                        onClick={() => handleViewDetails(project)}
+                        className="border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all"
+                      >
                         View Report
                       </button>
                     )}
