@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Search, MessageSquare, Send, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getProjectById, submitBid, getAllProjects, acceptBid } from '../../services/api';
+import Footer from '../../components/layout/Footer';
 import toast from 'react-hot-toast';
 
 export default function BiddingPage() {
@@ -556,6 +557,8 @@ export default function BiddingPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

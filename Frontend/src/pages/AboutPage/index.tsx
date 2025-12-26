@@ -1,4 +1,5 @@
 import { CheckCircle, Globe, Shield, Zap, ChevronRight } from 'lucide-react';
+import Footer from '../../components/layout/Footer';
 
 interface AboutPageProps {
   onNavigate: (page: 'home' | 'login' | 'signup' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'admin-dashboard') => void;
@@ -116,6 +117,8 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

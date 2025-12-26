@@ -7,6 +7,7 @@ import ProjectDetails from './components/ProjectDetails';
 import ProjectCompletionPopup from '../../../components/shared/ProjectCompletionPopup';
 import { getMyProjects, getProjectStats } from '../../../services/api';
 import { approveProjectCompletion } from '../../../services/projectApi';
+import Footer from '../../../components/layout/Footer';
 import toast from 'react-hot-toast';
 
 export default function ClientDashboard() {
@@ -449,6 +450,8 @@ export default function ClientDashboard() {
           onClose={() => setShowCompletionPopup(false)}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

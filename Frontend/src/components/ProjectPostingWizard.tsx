@@ -220,7 +220,7 @@ export default function ProjectPostingWizard({ onClose, onComplete }: ProjectPos
                 <p className="text-sm text-gray-500 mt-1">Be as detailed as possible to help researchers understand your needs</p>
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-bold text-[#1F1F1F] mb-2">
                   Upload Supporting Files (Optional)
                 </label>
@@ -232,7 +232,7 @@ export default function ProjectPostingWizard({ onClose, onComplete }: ProjectPos
                     <p className="text-sm text-[#2D6CDF] mt-3">{formData.files.length} file(s) selected</p>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
 

@@ -1,5 +1,6 @@
 import { CheckCircle, Award, Upload, ExternalLink, BookOpen, FileCheck, Trophy } from 'lucide-react';
 import { useState } from 'react';
+import Footer from '../../components/layout/Footer';
 
 export default function VerificationCertificationPage() {
   const [activeTab, setActiveTab] = useState<'verification' | 'certification'>('verification');
@@ -284,6 +285,8 @@ export default function VerificationCertificationPage() {
           </div>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 }

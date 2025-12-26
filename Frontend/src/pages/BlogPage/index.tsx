@@ -1,4 +1,5 @@
 import { Calendar, Clock, User, ArrowRight, TrendingUp, BookOpen, Lightbulb, Microscope, Code, Briefcase, Tag } from 'lucide-react';
+import Footer from '../../components/layout/Footer';
 
 interface BlogPageProps {
   onNavigate: (page: 'home' | 'about' | 'login' | 'signup' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'admin-dashboard') => void;
@@ -280,6 +281,8 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

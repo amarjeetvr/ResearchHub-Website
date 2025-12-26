@@ -1,6 +1,7 @@
 import { Building2, CreditCard, Smartphone, CheckCircle, Copy, Download } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Footer from '../../components/layout/Footer';
 
 export default function FreelancerAccountDetailsPage() {
   const location = useLocation();
@@ -274,6 +275,8 @@ Generated on: ${new Date().toLocaleString()}
           </button>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

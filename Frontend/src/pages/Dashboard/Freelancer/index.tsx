@@ -4,6 +4,7 @@ import { Briefcase, Clock, CheckCircle, DollarSign, TrendingUp, Search, Send, X,
 import { getAllProjects, submitBid, getMyProposals, getMyActiveProjects, getMyCompletedProjects, getFreelancerStats } from '../../../services/api';
 import FreelancerProjectDetails from './components/FreelancerProjectDetails';
 import ProfileViewPopup from '../../../components/shared/ProfileViewPopup';
+import Footer from '../../../components/layout/Footer';
 import toast from 'react-hot-toast';
 
 export default function FreelancerDashboard() {
@@ -633,6 +634,8 @@ export default function FreelancerDashboard() {
       {showProfilePopup && (
         <ProfileViewPopup onClose={() => setShowProfilePopup(false)} />
       )}
+
+      <Footer />
     </div>
   );
 }

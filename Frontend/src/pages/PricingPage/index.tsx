@@ -1,5 +1,6 @@
 import { Check, Sparkles, Zap, Building2, GraduationCap, Rocket, HelpCircle, ChevronDown, ArrowRight, Shield, Clock, TrendingDown } from 'lucide-react';
 import { useState } from 'react';
+import Footer from '../../components/layout/Footer';
 
 interface PricingPageProps {
   onNavigate: (page: 'home' | 'about' | 'blog' | 'login' | 'signup' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'client-dashboard' | 'admin-dashboard') => void;
@@ -491,6 +492,8 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

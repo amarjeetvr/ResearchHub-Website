@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Send, Paperclip, Download, FileText, Shield, AlertTriangle } from 'lucide-react';
+import Footer from '../../components/layout/Footer';
 
 export default function MessagingPage() {
   const [messageInput, setMessageInput] = useState('');
@@ -243,6 +244,8 @@ export default function MessagingPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
