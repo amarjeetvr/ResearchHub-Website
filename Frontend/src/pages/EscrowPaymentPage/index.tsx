@@ -27,6 +27,18 @@ export default function EscrowPaymentPage() {
   const platformCommission = project.agreedAmount * 0.1;
   const totalAmount = project.agreedAmount + platformCommission;
 
+  // Function to mask freelancer name
+  const maskName = (name: string) => {
+    if (!name) return '';
+    return name
+      .split(' ')
+      .map(word => {
+        if (word.length === 0) return '';
+        return word[0].toLowerCase() + '*'.repeat(word.length - 1);
+      })
+      .join(' ');
+  };
+
   const handlePayment = async () => {
     if (!projectId || !bidId) {
       toast.error('Missing project or bid information');
@@ -276,7 +288,7 @@ export default function EscrowPaymentPage() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500 mb-1">Freelancer</div>
-                  <div className="font-semibold text-[#1F1F1F]">Researcher {project.freelancer}</div>
+                  <div className="font-semibold text-[#1F1F1F]">Researcher {maskName(project.freelancer)}</div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-500 mb-1">Timeline</div>

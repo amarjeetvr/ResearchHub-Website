@@ -73,7 +73,6 @@ export default function ClientDashboard() {
     setShowPostProject(false);
     fetchProjects();
     fetchStats();
-    toast.success('Project posted successfully!');
   };
 
   const handleViewBids = (project: any) => {

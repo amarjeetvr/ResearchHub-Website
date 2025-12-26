@@ -19,7 +19,7 @@ import {
   approveProjectCompletion,
   getAdminProjects,
   releasePayment,
-} from "../controllers/project.controller.js";
+} from "../controllers/project/project.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { multipleUpload } from "../middlewares/mutler.js";
 

@@ -546,7 +546,7 @@ export default function FreelancerDashboard() {
                         className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF]"
                       />
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">You'll receive 90% after platform commission</p>
+                    {/* <p className="text-xs text-gray-500 mt-1">You'll receive 90% after platform commission</p> */}
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-[#1F1F1F] mb-2">
@@ -579,7 +579,7 @@ export default function FreelancerDashboard() {
                   />
                 </div>
 
-                <div className="bg-[#F5F7FA] rounded-xl p-4">
+                {/* <div className="bg-[#F5F7FA] rounded-xl p-4">
                   <div className="text-sm space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Your Fee:</span>
@@ -594,7 +594,7 @@ export default function FreelancerDashboard() {
                       <span className="font-bold text-green-600">${proposalData.proposedFees ? (parseFloat(proposalData.proposedFees) * 0.9).toFixed(2) : '0'}</span>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <button
                   onClick={handleSubmitProposal}

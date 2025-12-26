@@ -30,7 +30,7 @@ export default function LoginPage({ onLogin, onSwitchToSignup }: LoginPageProps)
 
     try {
       await onLogin(email, password);
-      toast.success('Login successful! Redirecting...');
+      toast.success('Login successful!');
     } catch (err: any) {
       toast.error(err.message || 'Login failed. Please check your credentials.');
     } finally {
