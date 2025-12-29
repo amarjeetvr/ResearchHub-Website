@@ -467,3 +467,19 @@ export const adminLogin = async (req, res) => {
   }
 };
 
+// Admin Logout
+export const adminLogout = async (req, res) => {
+  try {
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+      message: "Admin logged out successfully.",
+      success: true
+    });
+  } catch (error) {
+    console.error("Admin logout error:", error);
+    return res.status(500).json({ 
+      message: "Internal server error", 
+      success: false 
+    });
+  }
+};
+

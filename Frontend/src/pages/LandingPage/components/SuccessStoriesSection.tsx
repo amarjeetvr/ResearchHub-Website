@@ -3,7 +3,7 @@ import { SUCCESS_STORIES } from '../../../utils/constants';
 
 export default function SuccessStoriesSection() {
   return (
-    <section className="py-12 sm:py-16 md:py-24 bg-[#F5F7FA]">
+    <section className="py-12 sm:py-16 md:py-24 bg-[#F5F7FA]" data-section="success-stories">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1F1F1F] mb-3 sm:mb-4">

@@ -1,4 +1,7 @@
-import { Users, FolderOpen, DollarSign, AlertCircle, Shield, Settings, BarChart3, FileText, Award, Wrench } from 'lucide-react';
+import { Users, FolderOpen, DollarSign, AlertCircle, Shield, Settings, BarChart3, FileText, Award, Wrench, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { adminLogout } from '../../../../services/authApi';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -6,6 +9,23 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+  
+  const handleSignOut = async () => {
+    try {
+      console.log('Sign out clicked');
+      await adminLogout();
+      setUser(null);
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Still navigate to login page even if API call fails
+      setUser(null);
+      navigate('/admin/login');
+    }
+  };
+
   const menuItems = [
     { id: 'overview', icon: BarChart3, label: 'Overview' },
     { id: 'users', icon: Users, label: 'User Management' },
@@ -47,8 +67,12 @@ export default function AdminSidebar({ activeTab, onTabChange }: AdminSidebarPro
       </nav>
 
       <div className="pt-6 border-t border-gray-700">
-        <button className="w-full text-left text-gray-400 hover:text-white transition-colors">
-          Sign Out
+        <button 
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+        >
+          <LogOut size={20} />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

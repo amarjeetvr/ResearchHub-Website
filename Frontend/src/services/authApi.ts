@@ -146,6 +146,22 @@ export const adminLogin = async (credentials: {
   return data;
 };
 
+// Admin logout
+export const adminLogout = async () => {
+  const response = await fetch(`${API_BASE_URL}/user/admin/logout`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'Admin logout failed');
+  }
+  
+  return data;
+};
+
 // Get Bank Account Details (Freelancer only)
 export const getBankAccount = async () => {
   const response = await fetch(`${API_BASE_URL}/user/bank-account`, {

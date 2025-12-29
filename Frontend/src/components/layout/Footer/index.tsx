@@ -9,6 +9,18 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSuccessStoriesClick = () => {
+    // Navigate to home page first if not already there
+    navigate('/');
+    // Wait for navigation to complete, then scroll to success stories section
+    setTimeout(() => {
+      const successSection = document.querySelector('[data-section="success-stories"]');
+      if (successSection) {
+        successSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  };
+
   return (
     <footer className="bg-[#1F1F1F] text-white py-12 sm:py-16 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
@@ -16,20 +28,92 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Platform</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">How It Works</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Research Domains</a></li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Home
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/blog')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Blog
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/pricing')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Pricing
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/bidding')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Find Project
+                </button>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">For Researchers</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Join as Expert</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Get Verified</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Become Certified</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Success Stories</a></li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/signup')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Join as Expert
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/signup')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Get Verified
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={() => handleNavigation('/signup')} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Become Certified
+                </button>
+              </li>
+              <li className="relative z-30">
+                <button 
+                  onClick={handleSuccessStoriesClick} 
+                  className="hover:text-white transition-colors cursor-pointer text-left bg-transparent border-none p-0 underline-offset-2 hover:underline block w-full pointer-events-auto"
+                  type="button"
+                  style={{ font: 'inherit', color: 'inherit' }}
+                >
+                  Success Stories
+                </button>
+              </li>
             </ul>
           </div>
 

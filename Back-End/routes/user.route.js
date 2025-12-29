@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logout, register, updateProfile, getCurrentUser, adminLogin, getBankAccount, updateBankAccount } from "../controllers/user.controller.js";
+import { login, logout, register, updateProfile, getCurrentUser, adminLogin, adminLogout, getBankAccount, updateBankAccount } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { singleupload } from "../middlewares/mutler.js";
 
@@ -15,8 +15,9 @@ router.route("/me").get(isAuthenticated, getCurrentUser);
 
 router.post('/google-signup', googleSignup);
 
-// Admin login route
+// Admin routes
 router.route("/admin/login").post(adminLogin);
+router.route("/admin/logout").get(adminLogout);
 
 // Bank Account routes (Freelancer only)
 router.route("/bank-account").get(isAuthenticated, getBankAccount);
