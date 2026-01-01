@@ -1,5 +1,5 @@
 // Helper utility functions
-
+//hint: You can add more helper functions as needed
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + '...';

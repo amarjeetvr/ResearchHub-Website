@@ -34,6 +34,7 @@ function AppContent() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [showProfilePopup, setShowProfilePopup] = useState(false);
 
+  
   // Handle navigation with URL updates
   const handleNavigate = (page: PageType) => {
     setCurrentPage(page);
