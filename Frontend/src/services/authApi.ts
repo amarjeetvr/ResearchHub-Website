@@ -13,13 +13,18 @@ export const registerUser = async (userData: {
   password: string;
   role: 'client' | 'freelancer';
 }) => {
+  // Create FormData for multipart/form-data request (backend expects file upload)
+  const formData = new FormData();
+  formData.append('fullname', userData.fullname);
+  formData.append('email', userData.email);
+  formData.append('phoneNumber', userData.phoneNumber);
+  formData.append('password', userData.password);
+  formData.append('role', userData.role);
+
   const response = await fetch(`${API_BASE_URL}/user/register`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     credentials: 'include',
-    body: JSON.stringify(userData),
+    body: formData, // Send as FormData instead of JSON
   });
 
   const data = await response.json();
