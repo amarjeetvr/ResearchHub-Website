@@ -64,7 +64,7 @@ export default function ProfileDropdown({
         )}
         <ChevronDown
           size={16}
-          className={`text-slate-600 transition-transform duration-200 ${
+          className={`text-white transition-transform duration-200 ${
             isOpen ? 'rotate-180' : ''
           }`}
         />
@@ -72,7 +72,7 @@ export default function ProfileDropdown({
 
       {isOpen && (
         <>
-          <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fadeIn">
+          <div className="fixed right-4 top-16 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-[9999] animate-fadeIn">
             <div className="bg-gradient-to-br from-blue-50 to-slate-50 px-4 py-4 border-b border-slate-200">
               <div className="flex items-center gap-3">
                 {user.profilePhoto ? (
