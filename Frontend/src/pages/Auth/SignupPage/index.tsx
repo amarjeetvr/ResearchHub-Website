@@ -234,9 +234,12 @@ export default function SignupPage({ onSignup, onSwitchToLogin }: SignupPageProp
       `}</style>
       <div className="max-w-2xl w-full relative z-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#2D6CDF] rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="w-16 h-16 bg-[#2D6CDF] rounded-2xl flex items-center justify-center mx-auto mb-4 hover:bg-[#1F1F1F] transition-colors cursor-pointer"
+          >
             <span className="text-white font-bold text-3xl">R</span>
-          </div>
+          </button>
           <h1 className="text-3xl font-bold text-white mb-2">Create Your Account</h1>
           <p className="text-white">Join ResearchHub and connect with verified researchers</p>
         </div>

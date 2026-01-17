@@ -200,11 +200,14 @@ export default function LoginPage({ onLogin, onSwitchToSignup }: LoginPageProps)
       `}</style>
       <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[#2D6CDF] rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="w-16 h-16 bg-[#2D6CDF] rounded-2xl flex items-center justify-center mx-auto mb-4 hover:bg-[#1F1F1F] transition-colors cursor-pointer"
+          >
             <span className="text-white font-bold text-3xl">R</span>
-          </div>
-          <h1 className="text-3xl font-bold text-[#1F1F1F] mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your ResearchHub account</p>
+          </button>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+          <p className="text-white">Sign in to your ResearchHub account</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
