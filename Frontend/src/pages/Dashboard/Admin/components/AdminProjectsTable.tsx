@@ -121,53 +121,53 @@ export default function AdminProjectsTable() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6">
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl shadow-xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#1F1F1F] mb-2">Payment Management</h2>
-          <p className="text-gray-600">Manage escrow payments and project completions</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Payment Management</h2>
+          <p className="text-gray-300">Manage escrow payments and project completions</p>
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF]"
+          className="px-4 py-2 bg-white/10 border border-white/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 backdrop-blur-sm"
         >
-          <option value="all">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="escrow_deposited">Escrow Deposited</option>
-          <option value="released">Released</option>
-          <option value="refunded">Refunded</option>
+          <option value="all" className="bg-gray-800 text-white">All Status</option>
+          <option value="pending" className="bg-gray-800 text-white">Pending</option>
+          <option value="escrow_deposited" className="bg-gray-800 text-white">Escrow Deposited</option>
+          <option value="released" className="bg-gray-800 text-white">Released</option>
+          <option value="refunded" className="bg-gray-800 text-white">Refunded</option>
         </select>
       </div>
 
       {filteredProjects.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">No admin projects found</p>
+          <p className="text-gray-400">No admin projects found</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Project</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Client</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Freelancer</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Amount</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Payment Status</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Project Status</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Created</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-700">Actions</th>
+              <tr className="border-b border-white/20">
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Project</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Client</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Freelancer</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Amount</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Payment Status</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Project Status</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Created</th>
+                <th className="text-left py-4 px-4 font-semibold text-gray-300">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredProjects.map((project) => (
-                <tr key={project._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <tr key={project._id} className="border-b border-white/10 hover:bg-white/5 transition-colors">
                   <td className="py-4 px-4">
                     <div className="flex items-start gap-3">
-                      <Briefcase className="text-[#2D6CDF] flex-shrink-0 mt-1" size={18} />
+                      <Briefcase className="text-cyan-400 flex-shrink-0 mt-1" size={18} />
                       <div>
-                        <div className="font-semibold text-[#1F1F1F] mb-1">{project.projectTitle}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-semibold text-white mb-1">{project.projectTitle}</div>
+                        <div className="text-xs text-gray-400">
                           {project.emailNotifications.proposalAcceptedSent && (
                             <span className="mr-2">✓ Email Sent</span>
                           )}
@@ -187,11 +187,11 @@ export default function AdminProjectsTable() {
                           className="w-8 h-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                          <User size={16} className="text-blue-600" />
+                        <div className="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center">
+                          <User size={16} className="text-blue-400" />
                         </div>
                       )}
-                      <span className="font-medium text-gray-700">{project.clientName}</span>
+                      <span className="font-medium text-gray-300">{project.clientName}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4">
@@ -203,28 +203,28 @@ export default function AdminProjectsTable() {
                           className="w-8 h-8 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <User size={16} className="text-green-600" />
+                        <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                          <User size={16} className="text-green-400" />
                         </div>
                       )}
                       <div>
-                        <div className="font-medium text-gray-700">{project.freelancerName}</div>
+                        <div className="font-medium text-gray-300">{project.freelancerName}</div>
                         {project.freelancerId?.bankAccount?.accountNumber && (
-                          <div className="text-xs text-gray-500 font-mono">Bank: {project.freelancerId.bankAccount.accountNumber}</div>
+                          <div className="text-xs text-gray-400 font-mono">Bank: {project.freelancerId.bankAccount.accountNumber}</div>
                         )}
                       </div>
                     </div>
                   </td>
                   <td className="py-4 px-4">
                     <div>
-                      <div className="font-bold text-green-600 flex items-center gap-1">
+                      <div className="font-bold text-green-400 flex items-center gap-1">
                         <DollarSign size={16} />
                         ${project.bidAmount.toLocaleString()}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Escrow: ${project.escrowAmount.toLocaleString()}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-400">
                         Fee: ${project.platformCommission.toLocaleString()}
                       </div>
                     </div>
@@ -236,7 +236,7 @@ export default function AdminProjectsTable() {
                     {getProjectStatusBadge(project.projectStatus)}
                   </td>
                   <td className="py-4 px-4">
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-gray-300">
                       <Calendar size={16} />
                       <span className="text-sm">{formatDate(project.createdAt)}</span>
                     </div>
@@ -245,13 +245,13 @@ export default function AdminProjectsTable() {
                     {project.clientApproval.approved && project.paymentStatus !== 'released' ? (
                       <button
                         onClick={() => handleReleaseClick(project)}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm flex items-center gap-2"
+                        className="px-4 py-2 bg-green-500/20 text-green-400 border border-green-400/30 rounded-lg hover:bg-green-500/30 transition-colors font-medium text-sm flex items-center gap-2"
                       >
                         <DollarSign size={16} />
                         Release Payment
                       </button>
                     ) : project.paymentStatus === 'released' ? (
-                      <span className="text-green-600 font-medium text-sm flex items-center gap-2">
+                      <span className="text-green-400 font-medium text-sm flex items-center gap-2">
                         <CheckCircle size={16} />
                         Released
                       </span>
@@ -268,25 +268,25 @@ export default function AdminProjectsTable() {
 
       {/* Summary Stats */}
       <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 rounded-xl p-4">
-          <div className="text-sm text-blue-600 mb-1">Total Projects</div>
-          <div className="text-2xl font-bold text-blue-900">{projects.length}</div>
+        <div className="bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-xl p-4">
+          <div className="text-sm text-blue-400 mb-1">Total Projects</div>
+          <div className="text-2xl font-bold text-blue-300">{projects.length}</div>
         </div>
-        <div className="bg-green-50 rounded-xl p-4">
-          <div className="text-sm text-green-600 mb-1">Total Escrow</div>
-          <div className="text-2xl font-bold text-green-900">
+        <div className="bg-green-500/20 backdrop-blur-sm border border-green-400/30 rounded-xl p-4">
+          <div className="text-sm text-green-400 mb-1">Total Escrow</div>
+          <div className="text-2xl font-bold text-green-300">
             ${projects.reduce((sum, p) => sum + p.escrowAmount, 0).toLocaleString()}
           </div>
         </div>
-        <div className="bg-purple-50 rounded-xl p-4">
-          <div className="text-sm text-purple-600 mb-1">Platform Fees</div>
-          <div className="text-2xl font-bold text-purple-900">
+        <div className="bg-purple-500/20 backdrop-blur-sm border border-purple-400/30 rounded-xl p-4">
+          <div className="text-sm text-purple-400 mb-1">Platform Fees</div>
+          <div className="text-2xl font-bold text-purple-300">
             ${projects.reduce((sum, p) => sum + p.platformCommission, 0).toLocaleString()}
           </div>
         </div>
-        <div className="bg-amber-50 rounded-xl p-4">
-          <div className="text-sm text-amber-600 mb-1">Pending Release</div>
-          <div className="text-2xl font-bold text-amber-900">
+        <div className="bg-amber-500/20 backdrop-blur-sm border border-amber-400/30 rounded-xl p-4">
+          <div className="text-sm text-amber-400 mb-1">Pending Release</div>
+          <div className="text-2xl font-bold text-amber-300">
             {projects.filter(p => p.clientApproval.approved && p.paymentStatus !== 'released').length}
           </div>
         </div>

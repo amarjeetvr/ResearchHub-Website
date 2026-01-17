@@ -60,11 +60,18 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] flex">
+    <div className="min-h-screen flex" style={{ background: 'linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0f1629 100%)' }}>
+      {/* Glow orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-40 right-32 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl"></div>
+      </div>
+      
       <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 relative z-10">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-[#1F1F1F] mb-8">
+          <h1 className="text-3xl font-bold text-white mb-8">
             {activeTab === 'overview' && 'Dashboard Overview'}
             {activeTab === 'users' && 'User Management'}
             {activeTab === 'projects' && 'Payment Management'}
