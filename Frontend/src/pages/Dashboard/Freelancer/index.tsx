@@ -461,55 +461,79 @@ export default function FreelancerDashboard() {
                   <p className="text-gray-400 text-sm mt-2">{searchQuery ? 'Try adjusting your search' : 'Check back later for new opportunities'}</p>
                 </div>
               ) : (
-                filteredProjects.map((project) => (
-                  <div key={project._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all cursor-pointer" onClick={() => navigate(`/freelancer-dashboard/${project._id}`)}>
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-bold text-white hover:text-cyan-400 transition-colors">{project.title}</h3>
-                        </div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <span className="text-sm text-gray-300">Posted {getTimeAgo(project.createdAt)}</span>
-                          <span className="text-sm text-cyan-400 font-semibold">{project.bids?.length || 0} bids</span>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm text-gray-300">by</span>
-                            <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold">
-                              {getInitials(project.clientId?.fullname || 'Anonymous')}
+                filteredProjects.map((project) => {
+                  // Check if user has already submitted a proposal for this project
+                  const hasSubmittedProposal = proposals.some(proposal => proposal.project._id === project._id);
+                  
+                  return (
+                    <div key={project._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                          </div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-sm text-gray-300">Posted {getTimeAgo(project.createdAt)}</span>
+                            <span className="text-sm text-cyan-400 font-semibold">{project.bids?.length || 0} bids</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm text-gray-300">by</span>
+                              <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold">
+                                {getInitials(project.clientId?.fullname || 'Anonymous')}
+                              </div>
+                              <span className="text-sm text-gray-200 font-medium">
+                                {maskName(project.clientId?.fullname || 'Anonymous')}
+                              </span>
                             </div>
-                            <span className="text-sm text-gray-200 font-medium">
-                              {maskName(project.clientId?.fullname || 'Anonymous')}
-                            </span>
+                          </div>
+                          <p className="text-sm text-gray-300 mb-3 line-clamp-2">{project.introduction}</p>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {project.skills?.slice(0, 5).map((skill: string, idx: number) => (
+                              <span key={idx} className="bg-white/10 text-cyan-400 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
+                                {skill}
+                              </span>
+                            ))}
+                            {project.skills?.length > 5 && (
+                              <span className="bg-white/10 text-gray-300 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
+                                +{project.skills.length - 5} more
+                              </span>
+                            )}
                           </div>
                         </div>
-                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">{project.introduction}</p>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {project.skills?.slice(0, 5).map((skill: string, idx: number) => (
-                            <span key={idx} className="bg-white/10 text-cyan-400 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
-                              {skill}
-                            </span>
-                          ))}
-                          {project.skills?.length > 5 && (
-                            <span className="bg-white/10 text-gray-300 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
-                              +{project.skills.length - 5} more
-                            </span>
-                          )}
+                        <div className="text-right ml-4">
+                          <div className="text-sm text-gray-400">Budget</div>
+                          <div className="text-xl font-bold text-cyan-400">${project.budgetMin} - ${project.budgetMax}</div>
+                          <div className="text-sm text-gray-400 mt-1">Due: {formatDate(project.deadline)}</div>
                         </div>
                       </div>
-                      <div className="text-right ml-4">
-                        <div className="text-sm text-gray-400">Budget</div>
-                        <div className="text-xl font-bold text-cyan-400">${project.budgetMin} - ${project.budgetMax}</div>
-                        <div className="text-sm text-gray-400 mt-1">Due: {formatDate(project.deadline)}</div>
+                      <div className="flex gap-3">
+                        <button 
+                          onClick={() => handleViewProjectDetails(project)}
+                          className="bg-white/10 border-2 border-cyan-400 text-cyan-400 px-6 py-2.5 rounded-xl font-semibold hover:bg-cyan-400 hover:text-white transition-all inline-flex items-center gap-2"
+                        >
+                          <Eye size={18} />
+                          View Details
+                        </button>
+                        {hasSubmittedProposal ? (
+                          <button 
+                            disabled
+                            className="bg-gray-500 text-white px-6 py-2.5 rounded-xl font-semibold cursor-not-allowed inline-flex items-center gap-2 opacity-70"
+                          >
+                            <CheckCircle size={18} />
+                            Submitted
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={(e) => handleSubmitProposalClick(e, project)}
+                            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
+                          >
+                            <Send size={18} />
+                            Submit Proposal
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <button 
-                      onClick={(e) => handleSubmitProposalClick(e, project)}
-                      className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
-                    >
-                      <Send size={18} />
-                      Submit Proposal
-                    </button>
-                  </div>
-                ))
+                  );
+                })
               );
             })()}
           </div>

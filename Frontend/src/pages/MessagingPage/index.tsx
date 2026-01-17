@@ -102,65 +102,65 @@ export default function MessagingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629]">
       <div className="max-w-[1600px] mx-auto p-6">
-        <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 mb-6 flex items-start gap-3">
-          <Shield className="text-yellow-600 flex-shrink-0 mt-0.5" size={20} />
-          <div className="text-sm text-gray-700">
+        <div className="bg-yellow-500/20 border-2 border-yellow-400/30 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <Shield className="text-yellow-400 flex-shrink-0 mt-0.5" size={20} />
+          <div className="text-sm text-yellow-200">
             <span className="font-bold">Secure In-Platform Messaging:</span> All communications are monitored to protect your privacy. External contact information (email, phone, social media) is not allowed and will be automatically blocked.
           </div>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-6 h-[calc(100vh-200px)]">
-          <div className="lg:col-span-4 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-[#1F1F1F]">Messages</h2>
+          <div className="lg:col-span-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-md overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-white/20">
+              <h2 className="text-2xl font-bold text-white">Messages</h2>
             </div>
             <div className="flex-1 overflow-y-auto">
               {chatList.map((chat) => (
                 <div
                   key={chat.id}
                   onClick={() => setSelectedChat(chat.id)}
-                  className={`p-4 border-b border-gray-100 cursor-pointer transition-colors ${
-                    selectedChat === chat.id ? 'bg-[#2D6CDF]/5 border-l-4 border-l-[#2D6CDF]' : 'hover:bg-gray-50'
+                  className={`p-4 border-b border-white/10 cursor-pointer transition-colors ${
+                    selectedChat === chat.id ? 'bg-cyan-500/20 border-l-4 border-l-cyan-400' : 'hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#2D6CDF] to-[#1F1F1F] rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
                         {chat.participant}
                       </div>
                       <div>
-                        <div className="font-bold text-[#1F1F1F]">{chat.participant}</div>
-                        <div className="text-sm text-gray-500">{chat.project}</div>
+                        <div className="font-bold text-white">{chat.participant}</div>
+                        <div className="text-sm text-gray-400">{chat.project}</div>
                       </div>
                     </div>
                     {chat.unread > 0 && (
-                      <div className="w-6 h-6 bg-[#2D6CDF] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {chat.unread}
                       </div>
                     )}
                   </div>
-                  <div className="text-sm text-gray-600 truncate">{chat.lastMessage}</div>
+                  <div className="text-sm text-gray-300 truncate">{chat.lastMessage}</div>
                   <div className="text-xs text-gray-400 mt-1">{chat.timestamp}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="lg:col-span-8 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-gray-200">
+          <div className="lg:col-span-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-md overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-white/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#2D6CDF] to-[#1F1F1F] rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
                     RM
                   </div>
                   <div>
-                    <div className="font-bold text-[#1F1F1F]">Researcher RM</div>
-                    <div className="text-sm text-gray-500">Statistical Analysis Project</div>
+                    <div className="font-bold text-white">Researcher RM</div>
+                    <div className="text-sm text-gray-400">Statistical Analysis Project</div>
                   </div>
                 </div>
-                <button className="text-[#2D6CDF] font-semibold hover:text-[#1F1F1F] transition-colors">
+                <button className="text-cyan-400 font-semibold hover:text-white transition-colors">
                   View Project
                 </button>
               </div>
@@ -174,23 +174,23 @@ export default function MessagingPage() {
                       <div
                         className={`rounded-2xl px-4 py-3 ${
                           message.isMe
-                            ? 'bg-[#2D6CDF] text-white'
-                            : 'bg-[#F5F7FA] text-gray-800'
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                            : 'bg-white/10 text-gray-200 border border-white/20'
                         }`}
                       >
                         <p className="leading-relaxed">{message.content}</p>
                       </div>
                     ) : (
-                      <div className="border-2 border-gray-200 rounded-2xl p-4 bg-white hover:border-[#2D6CDF] transition-colors">
+                      <div className="border-2 border-white/20 rounded-2xl p-4 bg-white/5 hover:border-cyan-400 transition-colors">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#2D6CDF]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <FileText className="text-[#2D6CDF]" size={24} />
+                          <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <FileText className="text-cyan-400" size={24} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-[#1F1F1F] truncate">{message.fileName}</div>
-                            <div className="text-sm text-gray-500">{message.fileSize}</div>
+                            <div className="font-semibold text-white truncate">{message.fileName}</div>
+                            <div className="text-sm text-gray-400">{message.fileSize}</div>
                           </div>
-                          <button className="text-[#2D6CDF] hover:text-[#1F1F1F] transition-colors">
+                          <button className="text-cyan-400 hover:text-white transition-colors">
                             <Download size={20} />
                           </button>
                         </div>
@@ -204,10 +204,10 @@ export default function MessagingPage() {
               ))}
             </div>
 
-            <div className="p-4 border-t border-gray-200 bg-[#F5F7FA]">
-              <div className="bg-white rounded-xl border border-gray-300 focus-within:border-[#2D6CDF] focus-within:ring-2 focus-within:ring-[#2D6CDF]/20 transition-all">
+            <div className="p-4 border-t border-white/20 bg-white/5">
+              <div className="bg-white/10 rounded-xl border border-white/20 focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-400/20 transition-all">
                 <div className="flex items-end gap-2 p-3">
-                  <button className="text-gray-400 hover:text-[#2D6CDF] transition-colors p-2">
+                  <button className="text-gray-400 hover:text-cyan-400 transition-colors p-2">
                     <Paperclip size={20} />
                   </button>
                   <textarea
@@ -221,22 +221,22 @@ export default function MessagingPage() {
                     }}
                     placeholder="Type your message... (No external contact info allowed)"
                     rows={1}
-                    className="flex-1 resize-none focus:outline-none text-gray-800 max-h-32"
+                    className="flex-1 resize-none focus:outline-none text-white bg-transparent placeholder-gray-400 max-h-32"
                   />
                   <button
                     onClick={handleSend}
                     disabled={!messageInput.trim()}
                     className={`p-2 rounded-lg transition-all ${
                       messageInput.trim()
-                        ? 'bg-[#2D6CDF] text-white hover:bg-[#1F1F1F]'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400'
+                        : 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
                     }`}
                   >
                     <Send size={20} />
                   </button>
                 </div>
               </div>
-              <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+              <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
                 <AlertTriangle size={14} />
                 <span>Messages are monitored. Do not share email, phone, or external links.</span>
               </div>
