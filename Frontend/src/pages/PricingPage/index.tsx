@@ -146,7 +146,7 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629]">
       <section className="relative pt-24 pb-16 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
         <div className="absolute top-20 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
@@ -194,10 +194,10 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
         </div>
       </section>
 
-      <section className="py-16 px-6 lg:px-12 bg-slate-50">
+      <section className="py-16 px-6 lg:px-12 bg-white/5 backdrop-blur-sm border-y border-white/10">
         <div className="max-w-6xl mx-auto mb-12 text-center">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Flexible Pricing for Every Research Need</h2>
-          <p className="text-lg text-slate-700 leading-relaxed max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-white mb-4">Flexible Pricing for Every Research Need</h2>
+          <p className="text-lg text-gray-300 leading-relaxed max-w-4xl mx-auto">
             ResearchHub offers transparent, competitive pricing designed to make world-class research expertise accessible to everyone—from students conducting thesis work to Fortune 500 companies driving R&D innovation. Our AI-powered platform eliminates traditional agency markups and administrative overhead, allowing us to connect you with verified researchers at fair market rates. Standard projects follow our clear pricing tiers below, while complex, multi-phase, or specialized deep-tech research (such as clinical trials, advanced machine learning systems, drug discovery, and large-scale bioinformatics) may require custom quotes tailored to your unique requirements. Every project includes milestone-based payments, secure escrow protection, and our commitment to quality—because breakthrough research should be accessible, not exclusive.
           </p>
         </div>
@@ -210,7 +210,7 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
             return (
               <div
                 key={index}
-                className={`relative bg-white rounded-2xl shadow-xl border-2 ${colors.border} transition-all duration-300 hover:shadow-2xl hover:scale-105 overflow-hidden`}
+                className={`relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl border-2 ${colors.border} transition-all duration-300 hover:shadow-2xl hover:scale-105 overflow-hidden`}
               >
                 {plan.popular && (
                   <div className={`absolute top-0 left-0 right-0 ${colors.popular} text-white text-center py-2 text-sm font-bold`}>
@@ -223,22 +223,22 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
                     <Icon className="text-white" size={32} />
                   </div>
 
-                  <h3 className="text-3xl font-bold text-slate-900 mb-2">{plan.name}</h3>
-                  <p className="text-slate-600 font-medium mb-4">{plan.tagline}</p>
+                  <h3 className="text-3xl font-bold text-white mb-2">{plan.name}</h3>
+                  <p className="text-gray-300 font-medium mb-4">{plan.tagline}</p>
 
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold text-slate-900">{plan.price}</span>
+                      <span className="text-5xl font-bold text-white">{plan.price}</span>
                       {plan.period !== 'tailored pricing' && (
-                        <span className="text-slate-500">/ {plan.period.replace('per ', '')}</span>
+                        <span className="text-gray-400">/ {plan.period.replace('per ', '')}</span>
                       )}
                     </div>
                     {plan.period === 'tailored pricing' && (
-                      <p className="text-slate-500 text-sm mt-1">Based on project scope and complexity</p>
+                      <p className="text-gray-400 text-sm mt-1">Based on project scope and complexity</p>
                     )}
                   </div>
 
-                  <p className="text-slate-600 leading-relaxed mb-6 text-sm">
+                  <p className="text-gray-300 leading-relaxed mb-6 text-sm">
                     {plan.description}
                   </p>
 
@@ -251,13 +251,13 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
                   </button>
 
                   <div className="space-y-3">
-                    <p className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4">What's Included:</p>
+                    <p className="text-sm font-bold text-white uppercase tracking-wide mb-4">What's Included:</p>
                     {plan.features.map((feature, idx) => (
                       <div key={idx} className="flex items-start gap-3">
                         <div className="flex-shrink-0 mt-0.5">
-                          <Check className="text-green-600" size={20} />
+                          <Check className="text-green-400" size={20} />
                         </div>
-                        <span className="text-slate-700 text-sm leading-relaxed">{feature}</span>
+                        <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -405,30 +405,30 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
         </div>
       </section>
 
-      <section className="py-16 px-6 lg:px-12 bg-white">
+      <section className="py-16 px-6 lg:px-12 bg-white/5 backdrop-blur-sm border-y border-white/10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full text-blue-700 text-sm font-semibold mb-4">
+            <div className="inline-flex items-center gap-2 bg-cyan-500/20 px-4 py-2 rounded-full text-cyan-400 text-sm font-semibold mb-4 border border-cyan-400/30">
               <HelpCircle size={16} />
               <span>Common Questions</span>
             </div>
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Pricing FAQs</h2>
-            <p className="text-lg text-slate-600">Everything you need to know about ResearchHub pricing and payments</p>
+            <h2 className="text-4xl font-bold text-white mb-4">Pricing FAQs</h2>
+            <p className="text-lg text-gray-300">Everything you need to know about ResearchHub pricing and payments</p>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-slate-50 rounded-xl border-2 border-slate-200 overflow-hidden hover:border-blue-300 transition-all"
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-cyan-400/50 transition-all"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
                   className="w-full flex items-start justify-between p-6 text-left"
                 >
-                  <span className="font-bold text-lg text-slate-900 pr-4">{faq.question}</span>
+                  <span className="font-bold text-lg text-white pr-4">{faq.question}</span>
                   <ChevronDown
-                    className={`flex-shrink-0 text-slate-600 transition-transform ${
+                    className={`flex-shrink-0 text-gray-400 transition-transform ${
                       openFaq === index ? 'rotate-180' : ''
                     }`}
                     size={24}
@@ -437,7 +437,7 @@ export default function PricingPage({ onNavigate }: PricingPageProps) {
 
                 {openFaq === index && (
                   <div className="px-6 pb-6">
-                    <p className="text-slate-700 leading-relaxed">{faq.answer}</p>
+                    <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
                   </div>
                 )}
               </div>
