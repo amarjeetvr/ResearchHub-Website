@@ -1,75 +1,86 @@
-import { Briefcase, GraduationCap } from 'lucide-react';
-import { CLIENT_STEPS, FREELANCER_STEPS } from '../../../utils/constants';
+import { FileText, Users, Shield, ArrowRight } from 'lucide-react';
 
 export default function HowItWorksSection() {
+  const steps = [
+    {
+      number: 1,
+      icon: FileText,
+      title: 'Post a Job',
+      description: 'Tell us what you need done in seconds. It\'s free to post and you\'ll get bids within minutes.',
+    },
+    {
+      number: 2,
+      icon: Users,
+      title: 'Choose Researchers',
+      description: 'Get your first bid in seconds and choose from the best. Compare profiles, reviews, and portfolios.',
+    },
+    {
+      number: 3,
+      icon: Shield,
+      title: 'Pay Safely',
+      description: 'Only pay when you\'re 100% happy with the work. Our secure payment system protects you.',
+    },
+  ];
+
   return (
-    <section className="py-12 sm:py-16 md:py-24 bg-[#F5F7FA]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1F1F1F] mb-3 sm:mb-4">
-            How It Works — Fast & Simple
+    <section className="relative py-20 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            How it works
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Get started in minutes, whether you're hiring or offering expertise
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            Get started in three simple steps
           </p>
         </div>
-
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 mb-12 sm:mb-16">
-          {/* For Companies / Clients */}
-          <div>
-            <div className="bg-gradient-to-r from-[#2D6CDF] to-[#1F1F1F] text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
-              <h3 className="text-xl sm:text-2xl font-bold flex items-center gap-3">
-                <Briefcase size={24} className="flex-shrink-0" />
-                <span>For Companies / Clients</span>
-              </h3>
-            </div>
-            <div className="space-y-4 sm:space-y-6">
-              {CLIENT_STEPS.map((step, idx) => (
-                <div key={idx} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-100 relative">
-                  <div className="absolute -left-2 sm:-left-3 -top-2 sm:-top-3 w-8 h-8 sm:w-10 sm:h-10 bg-[#2D6CDF] rounded-full flex items-center justify-center text-white font-bold shadow-lg text-sm sm:text-base">
-                    {step.step}
-                  </div>
-                  <div className="flex gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#F5F7FA] rounded-xl flex items-center justify-center flex-shrink-0">
-                      <step.icon className="text-[#2D6CDF]" size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-base sm:text-lg font-bold text-[#1F1F1F] mb-1 sm:mb-2">{step.title}</h4>
-                      <p className="text-sm sm:text-base text-gray-600">{step.description}</p>
-                    </div>
-                  </div>
+  
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {steps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={step.number}
+                className="relative text-center group hover:transform hover:scale-105 transition-all duration-300"
+              >
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/50">
+                  {step.number}
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* For Researchers / Experts */}
-          <div>
-            <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
-              <h3 className="text-xl sm:text-2xl font-bold flex items-center gap-3">
-                <GraduationCap size={24} className="flex-shrink-0" />
-                <span>For Researchers / Experts</span>
-              </h3>
-            </div>
-            <div className="space-y-4 sm:space-y-6">
-              {FREELANCER_STEPS.map((step, idx) => (
-                <div key={idx} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-gray-100 relative">
-                  <div className="absolute -left-2 sm:-left-3 -top-2 sm:-top-3 w-8 h-8 sm:w-10 sm:h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg text-sm sm:text-base">
-                    {step.step}
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 pt-12 h-full group-hover:bg-white/10 group-hover:border-cyan-400/50 transition-all">
+                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/30">
+                    <Icon size={32} className="text-white" />
                   </div>
-                  <div className="flex gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <step.icon className="text-green-600" size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-base sm:text-lg font-bold text-[#1F1F1F] mb-1 sm:mb-2">{step.title}</h4>
-                      <p className="text-sm sm:text-base text-gray-600">{step.description}</p>
-                    </div>
-                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
+
+                {step.number < 3 && (
+                  <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+                    <ArrowRight size={24} className="text-cyan-400" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="text-center">
+          <button className="border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all hover:scale-105">
+            Get Started Now
+          </button>
+          <p className="text-sm text-gray-400 mt-4">
+            Join millions of people who use ResearchHub
+          </p>
         </div>
       </div>
     </section>

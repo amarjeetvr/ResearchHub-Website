@@ -213,32 +213,32 @@ export default function FreelancerDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629]">
      
 
       <div className="max-w-[1600px] mx-auto px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statsDisplay.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-2xl shadow-md p-6">
+            <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-lg p-6 hover:bg-white/10 transition-all">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
                   <stat.icon className="text-white" size={24} />
                 </div>
-                <TrendingUp className="text-green-500" size={20} />
+                <TrendingUp className="text-green-400" size={20} />
               </div>
-              <div className="text-3xl font-bold text-[#1F1F1F] mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
+              <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+              <div className="text-sm text-gray-300">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
+        <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setActiveTab('active')}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                  activeTab === 'active' ? 'bg-[#2D6CDF] text-white' : 'text-gray-600 hover:bg-gray-100'
+                  activeTab === 'active' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'text-gray-300 hover:bg-white/10'
                 }`}
               >
                 Active Projects
@@ -246,7 +246,7 @@ export default function FreelancerDashboard() {
               <button
                 onClick={() => setActiveTab('proposals')}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                  activeTab === 'proposals' ? 'bg-[#2D6CDF] text-white' : 'text-gray-600 hover:bg-gray-100'
+                  activeTab === 'proposals' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'text-gray-300 hover:bg-white/10'
                 }`}
               >
                 My Proposals
@@ -254,7 +254,7 @@ export default function FreelancerDashboard() {
               <button
                 onClick={() => setActiveTab('completed')}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                  activeTab === 'completed' ? 'bg-[#2D6CDF] text-white' : 'text-gray-600 hover:bg-gray-100'
+                  activeTab === 'completed' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'text-gray-300 hover:bg-white/10'
                 }`}
               >
                 Completed
@@ -262,7 +262,7 @@ export default function FreelancerDashboard() {
               <button
                 onClick={() => setActiveTab('available')}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                  activeTab === 'available' ? 'bg-[#2D6CDF] text-white' : 'text-gray-600 hover:bg-gray-100'
+                  activeTab === 'available' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'text-gray-300 hover:bg-white/10'
                 }`}
               >
                 Browse Projects
@@ -275,7 +275,7 @@ export default function FreelancerDashboard() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search projects..."
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2D6CDF] w-full md:w-64"
+                className="pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 w-full md:w-64 text-white placeholder-gray-400"
               />
             </div>
           </div>
@@ -284,39 +284,39 @@ export default function FreelancerDashboard() {
             {activeTab === 'active' && (
               activeProjects.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No active projects yet</p>
+                  <p className="text-gray-300 text-lg">No active projects yet</p>
                   <p className="text-gray-400 text-sm mt-2">Browse available projects and submit proposals to get started</p>
                 </div>
               ) : (
                 activeProjects.map((project) => (
-                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                  <div key={project._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{project.title}</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-sm text-gray-600">Client: {maskName(project.clientId?.fullname || 'Anonymous')}</span>
+                          <span className="text-sm text-gray-300">Client: {maskName(project.clientId?.fullname || 'Anonymous')}</span>
                           <span className="px-3 py-1 rounded-lg text-xs font-semibold bg-yellow-100 text-yellow-700">
                             IN PROGRESS
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">{project.introduction}</p>
                       </div>
                       <div className="text-right ml-4">
-                        <div className="text-sm text-gray-500">Progress</div>
-                        <div className="text-2xl font-bold text-[#2D6CDF]">{project.progress}%</div>
+                        <div className="text-sm text-gray-400">Progress</div>
+                        <div className="text-2xl font-bold text-cyan-400">{project.progress}%</div>
                       </div>
                     </div>
                     <div className="flex gap-3">
                       <button 
                         onClick={() => handleViewProjectDetails(project)}
-                        className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                        className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
                       >
                         <Eye size={18} />
                         View Details
                       </button>
                       <button 
                         onClick={() => navigate('/messages', { state: { projectId: project._id, clientId: project.clientId?._id } })}
-                        className="bg-white border-2 border-[#2D6CDF] text-[#2D6CDF] px-6 py-2.5 rounded-xl font-semibold hover:bg-[#2D6CDF] hover:text-white transition-all inline-flex items-center gap-2"
+                        className="bg-white/10 border-2 border-cyan-400 text-cyan-400 px-6 py-2.5 rounded-xl font-semibold hover:bg-cyan-400 hover:text-white transition-all inline-flex items-center gap-2"
                       >
                         <MessageCircle size={18} />
                         Chat
@@ -330,17 +330,17 @@ export default function FreelancerDashboard() {
             {activeTab === 'proposals' && (
               proposals.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No pending proposals yet</p>
+                  <p className="text-gray-300 text-lg">No pending proposals yet</p>
                   <p className="text-gray-400 text-sm mt-2">Start submitting proposals to available projects</p>
                 </div>
               ) : (
                 proposals.map((proposal) => (
-                  <div key={proposal._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                  <div key={proposal._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{proposal.project.title}</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">{proposal.project.title}</h3>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-gray-300">
                             Submitted {formatDate(proposal.submittedAt)}
                           </span>
                           <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${
@@ -350,18 +350,18 @@ export default function FreelancerDashboard() {
                           }`}>
                             {proposal.status.toUpperCase()}
                           </span>
-                          <span className="text-sm text-gray-600">Client: {maskName(proposal.project.clientId?.fullname || 'Anonymous')}</span>
+                          <span className="text-sm text-gray-300">Client: {maskName(proposal.project.clientId?.fullname || 'Anonymous')}</span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{proposal.project.introduction}</p>
+                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">{proposal.project.introduction}</p>
                       </div>
                       <div className="text-right ml-4">
-                        <div className="text-sm text-gray-500">Your Bid</div>
-                        <div className="text-2xl font-bold text-[#2D6CDF]">${proposal.amount}</div>
+                        <div className="text-sm text-gray-400">Your Bid</div>
+                        <div className="text-2xl font-bold text-cyan-400">${proposal.amount}</div>
                       </div>
                     </div>
                     <button 
                       onClick={() => handleViewProjectDetails(proposal.project, proposal)}
-                      className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                      className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
                     >
                       <Eye size={18} />
                       View Project
@@ -374,17 +374,17 @@ export default function FreelancerDashboard() {
             {activeTab === 'completed' && (
               completedProjects.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No completed projects yet</p>
+                  <p className="text-gray-300 text-lg">No completed projects yet</p>
                   <p className="text-gray-400 text-sm mt-2">Complete projects to build your portfolio</p>
                 </div>
               ) : (
                 completedProjects.map((project) => (
-                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
+                  <div key={project._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#1F1F1F] mb-2">{project.title}</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-gray-300">
                             Completed {formatDate(project.completedAt)}
                           </span>
                           {project.clientApproved ? (
@@ -403,30 +403,30 @@ export default function FreelancerDashboard() {
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">{project.introduction}</p>
                         
                         {/* Payment Status Info */}
                         {project.clientApproved && !project.paymentReleased && (
-                          <div className="mt-3 bg-amber-50 border-l-4 border-amber-400 p-3 rounded">
-                            <p className="text-sm text-amber-800 font-medium">
+                          <div className="mt-3 bg-amber-500/20 border-l-4 border-amber-400 p-3 rounded">
+                            <p className="text-sm text-amber-200 font-medium">
                               ⏳ Payment in process - Admin will release payment soon
                             </p>
                           </div>
                         )}
                         {project.paymentReleased && (
-                          <div className="mt-3 bg-emerald-50 border-l-4 border-emerald-400 p-3 rounded">
-                            <p className="text-sm text-emerald-800 font-medium">
+                          <div className="mt-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded">
+                            <p className="text-sm text-emerald-200 font-medium">
                               ✓ Payment has been released to your account
                             </p>
-                            <p className="text-xs text-emerald-700 mt-1">
+                            <p className="text-xs text-emerald-300 mt-1">
                               Funds should arrive in 3-5 business days
                             </p>
                           </div>
                         )}
                       </div>
                       <div className="text-right ml-4">
-                        <div className="text-sm text-gray-500">Earned</div>
-                        <div className="text-2xl font-bold text-green-600">
+                        <div className="text-sm text-gray-400">Earned</div>
+                        <div className="text-2xl font-bold text-green-400">
                           ${project.bids?.find((b: any) => b.status === 'accepted')?.amount || 0}
                         </div>
                         {project.paymentReleased && (
@@ -457,53 +457,53 @@ export default function FreelancerDashboard() {
 
               return filteredProjects.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No projects found</p>
+                  <p className="text-gray-300 text-lg">No projects found</p>
                   <p className="text-gray-400 text-sm mt-2">{searchQuery ? 'Try adjusting your search' : 'Check back later for new opportunities'}</p>
                 </div>
               ) : (
                 filteredProjects.map((project) => (
-                  <div key={project._id} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-[#2D6CDF] transition-all cursor-pointer" onClick={() => navigate(`/bidding/${project._id}`)}>
+                  <div key={project._id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-lg p-6 hover:bg-white/10 hover:border-cyan-400 transition-all cursor-pointer" onClick={() => navigate(`/freelancer-dashboard/${project._id}`)}>
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-bold text-[#1F1F1F] hover:text-[#2D6CDF] transition-colors">{project.title}</h3>
+                          <h3 className="text-xl font-bold text-white hover:text-cyan-400 transition-colors">{project.title}</h3>
                         </div>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-sm text-gray-600">Posted {getTimeAgo(project.createdAt)}</span>
-                          <span className="text-sm text-[#2D6CDF] font-semibold">{project.bids?.length || 0} bids</span>
+                          <span className="text-sm text-gray-300">Posted {getTimeAgo(project.createdAt)}</span>
+                          <span className="text-sm text-cyan-400 font-semibold">{project.bids?.length || 0} bids</span>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-sm text-gray-600">by</span>
-                            <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#2D6CDF] text-white text-xs font-bold">
+                            <span className="text-sm text-gray-300">by</span>
+                            <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold">
                               {getInitials(project.clientId?.fullname || 'Anonymous')}
                             </div>
-                            <span className="text-sm text-gray-700 font-medium">
+                            <span className="text-sm text-gray-200 font-medium">
                               {maskName(project.clientId?.fullname || 'Anonymous')}
                             </span>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{project.introduction}</p>
+                        <p className="text-sm text-gray-300 mb-3 line-clamp-2">{project.introduction}</p>
                         <div className="flex flex-wrap gap-2 mb-3">
                           {project.skills?.slice(0, 5).map((skill: string, idx: number) => (
-                            <span key={idx} className="bg-[#F5F7FA] text-[#1F1F1F] px-3 py-1 rounded-lg text-sm font-medium">
+                            <span key={idx} className="bg-white/10 text-cyan-400 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
                               {skill}
                             </span>
                           ))}
                           {project.skills?.length > 5 && (
-                            <span className="bg-[#F5F7FA] text-gray-600 px-3 py-1 rounded-lg text-sm font-medium">
+                            <span className="bg-white/10 text-gray-300 px-3 py-1 rounded-lg text-sm font-medium border border-white/20">
                               +{project.skills.length - 5} more
                             </span>
                           )}
                         </div>
                       </div>
                       <div className="text-right ml-4">
-                        <div className="text-sm text-gray-500">Budget</div>
-                        <div className="text-xl font-bold text-[#2D6CDF]">${project.budgetMin} - ${project.budgetMax}</div>
-                        <div className="text-sm text-gray-500 mt-1">Due: {formatDate(project.deadline)}</div>
+                        <div className="text-sm text-gray-400">Budget</div>
+                        <div className="text-xl font-bold text-cyan-400">${project.budgetMin} - ${project.budgetMax}</div>
+                        <div className="text-sm text-gray-400 mt-1">Due: {formatDate(project.deadline)}</div>
                       </div>
                     </div>
                     <button 
                       onClick={(e) => handleSubmitProposalClick(e, project)}
-                      className="bg-[#2D6CDF] text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all inline-flex items-center gap-2"
+                      className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
                     >
                       <Send size={18} />
                       Submit Proposal

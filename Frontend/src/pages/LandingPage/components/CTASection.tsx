@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react';
 import type { PageType } from '../../../types';
 
 interface CTASectionProps {
@@ -6,30 +7,40 @@ interface CTASectionProps {
 
 export default function CTASection({ onNavigate }: CTASectionProps) {
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-r from-[#2D6CDF] to-[#1F1F1F] relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-20">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
-          Ready to Innovate Faster?
+    <section className="relative py-20 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
+      </div>
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          Ready to get started?
         </h2>
-        <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 sm:mb-8 max-w-3xl mx-auto">
-          Join the global research innovation economy. Connect with verified experts or find meaningful projects today.
+        <p className="text-xl text-gray-300 mb-8">
+          Join thousands of satisfied clients and find your perfect research expert today
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center relative z-30">
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => onNavigate('signup')}
-            className="bg-gradient-to-r text-white from-[#0284C7] to-[#0B3C9D] px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-[#F5F7FA] transition-all shadow-xl cursor-pointer pointer-events-auto"
-            type="button"
+            className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
           >
-            Hire a Researcher
+            Get Started Free
+            <ArrowRight size={20} />
           </button>
           <button
-            onClick={() => onNavigate('signup')}
-            className="border-2 border-white text-white px-8 sm:px-10 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white hover:text-[#2D6CDF] transition-all cursor-pointer pointer-events-auto"
-            type="button"
+            onClick={() => onNavigate('bidding')}
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border-2 border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
           >
-            Join as a Researcher
+            Post a Job
+            <ArrowRight size={20} />
           </button>
         </div>
+
+        <p className="text-sm text-gray-400 mt-6">
+          No credit card required • Free to join • Cancel anytime
+        </p>
       </div>
     </section>
   );

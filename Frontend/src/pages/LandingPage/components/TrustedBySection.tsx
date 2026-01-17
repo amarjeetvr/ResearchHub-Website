@@ -1,20 +1,45 @@
-import { Building2 } from 'lucide-react';
-import { TRUSTED_BY } from '../../../utils/constants';
-
 export default function TrustedBySection() {
+  const companies = [
+    { name: 'Amazon', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg' },
+    { name: 'Google', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },
+    { name: 'Meta', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg' },
+    { name: 'Netflix', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg' },
+    { name: 'Airbnb', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg' },
+    { name: 'Adobe', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Adobe_Logo.svg' },
+    { name: 'Microsoft', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg' },
+    { name: 'Deloitte', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Deloitte.svg' },
+    { name: 'NASA', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/NASA_logo.svg' },
+    { name: 'IBM', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg' },
+    { name: 'Telstra', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Telstra_logo.svg' },
+    { name: 'Fujitsu', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Fujitsu-Logo.svg' },
+  ];
+
   return (
-    <section className="py-12 sm:py-16 bg-white border-y border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-6 sm:mb-8">
-          <h3 className="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Trusted By</h3>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
-          {TRUSTED_BY.map((entity, idx) => (
-            <div key={idx} className="flex items-center justify-center">
-              <div className="text-center">
-                <Building2 className="text-gray-400 mx-auto mb-2" size={28} />
-                <span className="text-xs sm:text-sm font-semibold text-gray-600">{entity}</span>
-              </div>
+    <section className="relative py-12 sm:py-14 lg:py-6 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-10 left-10 w-48 sm:w-64 h-48 sm:h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 right-10 w-48 sm:w-64 h-48 sm:h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center gap-6 sm:gap-8 lg:gap-10 overflow-x-auto lg:overflow-visible justify-start lg:justify-center scrollbar-hide px-1">
+          {companies.map((company) => (
+            <div
+              key={company.name}
+              className="flex-shrink-0 flex items-center justify-center opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300"
+            >
+              <img
+                src={company.logo}
+                alt={company.name}
+                className="h-6 sm:h-7 lg:h-8 w-auto object-contain filter brightness-0 invert"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `<span class="text-gray-400 text-xs sm:text-sm font-semibold">${company.name}</span>`;
+                  }
+                }}
+              />
             </div>
           ))}
         </div>
