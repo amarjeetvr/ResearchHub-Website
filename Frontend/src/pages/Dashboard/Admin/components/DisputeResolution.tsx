@@ -10,34 +10,34 @@ interface Dispute {
 
 export default function DisputeResolution({ disputes }: { disputes: Dispute[] }) {
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6">
-      <h3 className="text-xl font-bold text-[#1F1F1F] mb-6">Active Disputes ({disputes.length})</h3>
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl shadow-xl p-6">
+      <h3 className="text-xl font-bold text-white mb-6">Active Disputes ({disputes.length})</h3>
       <div className="space-y-4">
         {disputes.map(dispute => (
-          <div key={dispute.id} className="border border-gray-200 rounded-xl p-6">
+          <div key={dispute.id} className="border border-white/20 rounded-xl p-6 bg-white/5 backdrop-blur-sm">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h4 className="font-bold text-[#1F1F1F] text-lg mb-2">{dispute.project}</h4>
-                <div className="text-sm text-gray-600 space-y-1">
+                <h4 className="font-bold text-white text-lg mb-2">{dispute.project}</h4>
+                <div className="text-sm text-gray-300 space-y-1">
                   <div>Client: <span className="font-semibold">{dispute.client}</span> • Freelancer: <span className="font-semibold">{dispute.freelancer}</span></div>
-                  <div>Amount in Escrow: <span className="font-semibold text-[#2D6CDF]">${dispute.amount}</span></div>
+                  <div>Amount in Escrow: <span className="font-semibold text-cyan-400">${dispute.amount}</span></div>
                   <div>Reported: {dispute.date}</div>
                 </div>
               </div>
-              <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${
-                dispute.status === 'open' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'
+              <span className={`px-3 py-1 rounded-lg text-xs font-semibold border ${
+                dispute.status === 'open' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-400/30' : 'bg-blue-500/20 text-blue-400 border-blue-400/30'
               }`}>
                 {dispute.status}
               </span>
             </div>
             <div className="flex gap-3">
-              <button className="flex-1 bg-[#2D6CDF] text-white py-2 rounded-xl font-semibold hover:bg-[#1F1F1F] transition-all">
+              <button className="flex-1 bg-cyan-500/20 text-cyan-400 border border-cyan-400/30 py-2 rounded-xl font-semibold hover:bg-cyan-500/30 transition-all">
                 Review Details
               </button>
-              <button className="flex-1 border-2 border-green-500 text-green-600 py-2 rounded-xl font-semibold hover:bg-green-50 transition-all">
+              <button className="flex-1 bg-green-500/20 text-green-400 border border-green-400/30 py-2 rounded-xl font-semibold hover:bg-green-500/30 transition-all">
                 Resolve in Favor of Client
               </button>
-              <button className="flex-1 border-2 border-blue-500 text-blue-600 py-2 rounded-xl font-semibold hover:bg-blue-50 transition-all">
+              <button className="flex-1 bg-blue-500/20 text-blue-400 border border-blue-400/30 py-2 rounded-xl font-semibold hover:bg-blue-500/30 transition-all">
                 Resolve in Favor of Freelancer
               </button>
             </div>
