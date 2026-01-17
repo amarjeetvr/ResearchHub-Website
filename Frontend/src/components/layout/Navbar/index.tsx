@@ -21,101 +21,108 @@ export default function Navbar({ onNavigate, onViewProfile, onLogout }: NavbarPr
   };
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
+    <nav className="sticky top-0 z-50 relative overflow-hidden">
+      {/* Background with gradient matching homepage */}
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0f1629 100%)' }}></div>
+      
+      {/* Animated glow orbs */}
+      <div className="absolute top-0 left-20 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+      <div className="absolute top-0 right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '2s' }}></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
+      
+      {/* Glassmorphism overlay */}
+      <div className="absolute inset-0 bg-white/5 backdrop-blur-sm border-b border-white/10"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => onNavigate(isAuthenticated && user?.role === 'client' ? 'client-dashboard' : 'home')}
-          >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#2D6CDF] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg sm:text-xl">R</span>
+          <div className="flex items-center gap-10">
+            <div
+              className="flex items-center gap-2 cursor-pointer group transition-all"
+              onClick={() => onNavigate(isAuthenticated && user?.role === 'client' ? 'client-dashboard' : 'home')}
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/50 group-hover:shadow-cyan-500/70 transition-all group-hover:scale-105">
+                <span className="text-white font-bold text-lg sm:text-xl">R</span>
+              </div>
+              <span className="text-lg sm:text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">ResearchHub</span>
             </div>
-            <span className="text-lg sm:text-xl font-bold text-[#1F1F1F]">ResearchHub</span>
-          </div>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-6">
-            {isAuthenticated && user ? (
-              <>
-                {user.role === 'client' && (
+            {/* Desktop Navigation Links - Left Side */}
+            <div className="hidden lg:flex items-center gap-6">
+              {isAuthenticated && user ? (
+                <>
+                  {user.role === 'client' && (
+                    <button
+                      onClick={() => onNavigate('client-dashboard')}
+                      className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                    >
+                      Dashboard
+                    </button>
+                  )}
+                  {user.role === 'freelancer' && (
+                    <button
+                      onClick={() => onNavigate('freelancer-dashboard')}
+                      className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                    >
+                      Dashboard
+                    </button>
+                  )}
+                  {user.role !== 'client' && (
+                    <button
+                      onClick={() => onNavigate('bidding')}
+                      className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                    >
+                      Projects
+                    </button>
+                  )}
                   <button
-                    onClick={() => onNavigate('client-dashboard')}
-                    className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
+                    onClick={() => onNavigate('messaging')}
+                    className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
                   >
-                    Dashboard
+                    Messages
                   </button>
-                )}
-                {user.role === 'freelancer' && (
-                  <button
-                    onClick={() => onNavigate('freelancer-dashboard')}
-                    className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                  >
-                    Dashboard
-                  </button>
-                )}
-                {user.role !== 'client' && (
+                  {user.role === 'freelancer' && (
+                    <button
+                      onClick={() => onNavigate('verification')}
+                      className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                    >
+                      Verification
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
                   <button
                     onClick={() => onNavigate('bidding')}
-                    className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
+                    className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
                   >
-                    Projects
+                    Find Projects
                   </button>
-                )}
-                <button
-                  onClick={() => onNavigate('messaging')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Messages
-                </button>
-                {user.role === 'freelancer' && (
                   <button
-                    onClick={() => onNavigate('verification')}
-                    className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
+                    onClick={() => onNavigate('login')}
+                    className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
                   >
-                    Verification
+                    Post Projects
                   </button>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => onNavigate('home')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Home
-                </button>
-                <button
-                  onClick={() => onNavigate('bidding')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Find Projects
-                </button>
-                <button
-                  onClick={() => onNavigate('login')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Post Projects
-                </button>
-                <button
-                  onClick={() => onNavigate('pricing')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Pricing
-                </button>
-                <button
-                  onClick={() => onNavigate('blog')}
-                  className="text-[#1F1F1F] hover:text-[#2D6CDF] font-medium transition-colors"
-                >
-                  Blog
-                </button>
-              </>
-            )}
+                  <button
+                    onClick={() => onNavigate('pricing')}
+                    className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                  >
+                    Pricing
+                  </button>
+                  <button
+                    onClick={() => onNavigate('blog')}
+                    className="text-gray-300 hover:text-cyan-400 font-semibold transition-all text-sm"
+                  >
+                    Blog
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-4">
+          {/* Desktop Auth Buttons - Right Side */}
+          <div className="hidden lg:flex items-center gap-3">
             {isAuthenticated && user ? (
               <ProfileDropdown
                 onViewProfile={onViewProfile}
@@ -125,15 +132,15 @@ export default function Navbar({ onNavigate, onViewProfile, onLogout }: NavbarPr
               <>
                 <button
                   onClick={() => onNavigate('login')}
-                  className="text-[#2D6CDF] font-semibold hover:text-[#1F1F1F] transition-colors text-sm lg:text-base"
+                  className="text-gray-300 hover:text-white font-semibold transition-all px-4 py-2 rounded-lg hover:bg-white/10 text-sm"
                 >
-                  Sign In
+                  Login
                 </button>
                 <button
                   onClick={() => onNavigate('signup')}
-                  className="bg-gradient-to-r from-[#0284C7] to-[#0B3C9D] text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-xl font-semibold text-sm lg:text-base shadow-md transition-all hover:opacity-90"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-lg font-bold transition-all shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 hover:scale-105 text-sm"
                 >
-                  Get Started
+                  Sign Up
                 </button>
               </>
             )}
@@ -142,7 +149,7 @@ export default function Navbar({ onNavigate, onViewProfile, onLogout }: NavbarPr
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-[#1F1F1F]"
+            className="lg:hidden text-white"
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -151,124 +158,120 @@ export default function Navbar({ onNavigate, onViewProfile, onLogout }: NavbarPr
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
-          {isAuthenticated && user ? (
-            <>
-              {/* User Profile Card */}
-              <div className="bg-gradient-to-br from-blue-50 to-slate-50 rounded-lg px-4 py-4 mb-4 border border-slate-200">
-                <div className="flex items-center gap-3">
-                  {user.profilePhoto ? (
-                    <img 
-                      src={user.profilePhoto} 
-                      alt={user.fullname}
-                      className="w-12 h-12 rounded-full object-cover shadow-md"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full flex items-center justify-center text-white font-bold shadow-md">
-                      {user.fullname.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
+        <div className="lg:hidden relative z-10" style={{ background: 'linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0f1629 100%)' }}>
+          <div className="px-4 py-4 max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-white/10">
+            {isAuthenticated && user ? (
+              <>
+                {/* User Profile Card */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-4 mb-4 border border-white/20">
+                  <div className="flex items-center gap-3">
+                    {user.profilePhoto ? (
+                      <img 
+                        src={user.profilePhoto} 
+                        alt={user.fullname}
+                        className="w-12 h-12 rounded-full object-cover shadow-md"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                        {user.fullname.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-white truncate">{user.fullname}</p>
+                      <p className="text-sm text-gray-300">{user.role === 'client' ? 'Client' : 'Researcher'}</p>
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-900 truncate">{user.fullname}</p>
-                    <p className="text-sm text-slate-600">{user.role === 'client' ? 'Client' : 'Researcher'}</p>
                   </div>
                 </div>
-              </div>
 
-              {/* Authenticated User Menu Items */}
-              {user.role === 'client' && (
+                {/* Authenticated User Menu Items */}
+                {user.role === 'client' && (
+                  <button
+                    onClick={() => handleMobileNavigate('client-dashboard')}
+                    className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
+                  >
+                    Dashboard
+                  </button>
+                )}
+                {user.role === 'freelancer' && (
+                  <button
+                    onClick={() => handleMobileNavigate('freelancer-dashboard')}
+                    className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
+                  >
+                    Dashboard
+                  </button>
+                )}
+                {user.role !== 'client' && (
+                  <button
+                    onClick={() => handleMobileNavigate('bidding')}
+                    className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
+                  >
+                    Projects
+                  </button>
+                )}
                 <button
-                  onClick={() => handleMobileNavigate('client-dashboard')}
-                  className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
+                  onClick={() => handleMobileNavigate('messaging')}
+                  className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
                 >
-                  Dashboard
+                  Messages
                 </button>
-              )}
-              {user.role === 'freelancer' && (
+
+                <div className="border-t border-white/10 my-3"></div>
+
                 <button
-                  onClick={() => handleMobileNavigate('freelancer-dashboard')}
-                  className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
+                  onClick={() => { 
+                    onViewProfile();
+                    setMobileMenuOpen(false); 
+                  }}
+                  className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
                 >
-                  Dashboard
+                  View Details
                 </button>
-              )}
-              {user.role !== 'client' && (
+                <button
+                  onClick={() => { 
+                    onLogout(); 
+                    setMobileMenuOpen(false); 
+                  }}
+                  className="block w-full text-left py-3 text-red-400 hover:text-red-300 font-semibold transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Guest User Menu Items */}
+                <button
+                  onClick={() => handleMobileNavigate('blog')}
+                  className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
+                >
+                  Blog
+                </button>
+                <button
+                  onClick={() => handleMobileNavigate('pricing')}
+                  className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
+                >
+                  Pricing
+                </button>
                 <button
                   onClick={() => handleMobileNavigate('bidding')}
-                  className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
+                  className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
                 >
-                  Projects
+                  Find Projects
                 </button>
-              )}
-              <button
-                onClick={() => handleMobileNavigate('messaging')}
-                className="block w-full text-left py-3 text-[#1F1F1F] hover:text-[#2D6CDF] font-medium"
-              >
-                Messages
-              </button>
-
-              <div className="border-t border-slate-200 my-3"></div>
-
-              <button
-                onClick={() => { 
-                  onViewProfile();
-                  setMobileMenuOpen(false); 
-                }}
-                className="block w-full text-left py-3 text-[#1F1F1F] hover:text-blue-600 font-medium"
-              >
-                View Details
-              </button>
-              <button
-                onClick={() => { 
-                  onLogout(); 
-                  setMobileMenuOpen(false); 
-                }}
-                className="block w-full text-left py-3 text-red-600 font-medium"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              {/* Guest User Menu Items */}
-              <button
-                onClick={() => handleMobileNavigate('home')}
-                className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => handleMobileNavigate('blog')}
-                className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
-              >
-                Blog
-              </button>
-              <button
-                onClick={() => handleMobileNavigate('pricing')}
-                className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
-              >
-                Pricing
-              </button>
-              <button
-                onClick={() => handleMobileNavigate('bidding')}
-                className="block w-full text-left py-3 text-[#1F1F1F] font-medium"
-              >
-                Find Projects
-              </button>
-              <button
-                onClick={() => handleMobileNavigate('login')}
-                className="block w-full text-left py-3 text-[#2D6CDF] font-semibold"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => handleMobileNavigate('signup')}
-                className="block w-full text-left py-3 text-[#2D6CDF] font-semibold"
-              >
-                Get Started
-              </button>
-            </>
-          )}
+                <button
+                  onClick={() => handleMobileNavigate('login')}
+                  className="block w-full text-left py-3 text-gray-300 hover:text-white font-semibold transition-colors"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => handleMobileNavigate('signup')}
+                  className="block w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white py-3 rounded-lg font-bold text-center transition-all shadow-lg shadow-cyan-500/50 mt-2"
+                >
+                  Get Started
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </nav>
