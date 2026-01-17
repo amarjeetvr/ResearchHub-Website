@@ -72,50 +72,50 @@ export default function ProfileDropdown({
 
       {isOpen && (
         <>
-          <div className="fixed right-4 top-16 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-[9999] animate-fadeIn">
-            <div className="bg-gradient-to-br from-blue-50 to-slate-50 px-4 py-4 border-b border-slate-200">
-              <div className="flex items-center gap-3">
+          <div className="fixed right-4 top-16 w-48 bg-gray-900/95 backdrop-blur-sm rounded-lg shadow-2xl border border-white/20 overflow-hidden z-[9999] animate-fadeIn">
+            <div className="px-3 py-2 border-b border-white/10">
+              <div className="flex items-center gap-2">
                 {user.profilePhoto ? (
                   <img 
                     src={user.profilePhoto} 
                     alt={user.fullname}
-                    className="w-12 h-12 rounded-full object-cover shadow-md"
+                    className="w-8 h-8 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {getInitials(user.fullname)}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-900 truncate">{user.fullname}</p>
-                  <p className="text-sm text-slate-600">{roleDisplay}</p>
+                  <p className="font-medium text-white text-sm truncate">{user.fullname}</p>
+                  <p className="text-xs text-gray-300">{roleDisplay}</p>
                 </div>
               </div>
             </div>
 
-            <div className="py-2">
+            <div className="py-1">
               <button
                 onClick={() => {
                   onViewProfile();
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors flex items-center gap-3 text-slate-700 hover:text-blue-600"
+                className="w-full px-3 py-2 text-left hover:bg-white/10 transition-colors flex items-center gap-2 text-gray-300 hover:text-cyan-400"
               >
-                <User size={18} />
-                <span className="font-medium">View Details</span>
+                <User size={16} />
+                <span className="font-medium text-sm">Profile</span>
               </button>
 
-              <div className="border-t border-slate-200 my-2"></div>
+              <div className="border-t border-white/10 my-1"></div>
 
               <button
                 onClick={() => {
                   onLogout();
                   setIsOpen(false);
                 }}
-                className="w-full px-4 py-3 text-left hover:bg-red-50 transition-colors flex items-center gap-3 text-red-600 hover:text-red-700"
+                className="w-full px-3 py-2 text-left hover:bg-red-500/20 transition-colors flex items-center gap-2 text-red-400 hover:text-red-300"
               >
-                <LogOut size={18} />
-                <span className="font-medium">Logout</span>
+                <LogOut size={16} />
+                <span className="font-medium text-sm">Logout</span>
               </button>
             </div>
           </div>

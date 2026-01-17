@@ -224,7 +224,7 @@ export default function Navbar({ onNavigate, onViewProfile, onLogout }: NavbarPr
                   }}
                   className="block w-full text-left py-3 text-gray-300 hover:text-cyan-400 font-semibold transition-colors"
                 >
-                  View Details
+                  Profile
                 </button>
                 <button
                   onClick={() => { 
