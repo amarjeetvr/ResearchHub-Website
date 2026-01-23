@@ -21,11 +21,12 @@ import TermsAndConditions from './pages/Policies/TermsAndConditions';
 import PrivacyPolicy from './pages/Policies/PrivacyPolicy';
 import AcademicIntegrity from './pages/Policies/AcademicIntegrity';
 import EscrowServiceTerms from './pages/Policies/EscrowServiceTerms';
+import ServicePage from './pages/Services/ServicePage';
 import Navbar from './components/layout/Navbar';
 import ProfileViewPopup from './components/shared/ProfileViewPopup';
 import toast from 'react-hot-toast';
 
-type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'freelancer-account-details' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard' | 'terms-and-conditions' | 'privacy-policy' | 'academic-integrity-policy' | 'escrow-service-terms';
+type PageType = 'home' | 'about' | 'blog' | 'pricing' | 'login' | 'signup' | 'admin-login' | 'bidding' | 'messaging' | 'escrow' | 'verification' | 'freelancer-account-details' | 'client-dashboard' | 'freelancer-dashboard' | 'admin-dashboard' | 'terms-and-conditions' | 'privacy-policy' | 'academic-integrity-policy' | 'escrow-service-terms' | 'service';
 
 function AppContent() {
   const navigate = useNavigate();
@@ -56,7 +57,8 @@ function AppContent() {
       'terms-and-conditions': '/terms-and-conditions',
       'privacy-policy': '/privacy-policy',
       'academic-integrity-policy': '/academic-integrity-policy',
-      'escrow-service-terms': '/escrow-service-terms'
+      'escrow-service-terms': '/escrow-service-terms',
+      'service': '/services'
     };
     navigate(routes[page]);
   };
@@ -88,6 +90,8 @@ function AppContent() {
     // Handle dynamic routes
     if (location.pathname.startsWith('/bidding')) {
       setCurrentPage('bidding');
+    } else if (location.pathname.startsWith('/services/')) {
+      setCurrentPage('service');
     } else {
       const page = pathToPage[location.pathname] || 'home';
       setCurrentPage(page);
@@ -197,6 +201,8 @@ function AppContent() {
         return <AcademicIntegrity />;
       case 'escrow-service-terms':
         return <EscrowServiceTerms />;
+      case 'service':
+        return <ServicePage />;
       default:
         return <LandingPage onNavigate={handleNavigate} />;
     }

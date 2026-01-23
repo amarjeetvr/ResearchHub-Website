@@ -1,20 +1,27 @@
 import { Code, Palette, Smartphone, TrendingUp, FileText, Video, Users, Headphones, Globe, Mic, Box } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function PopularServicesSection() {
+  const navigate = useNavigate();
+  
   const services = [
-    { name: 'AI Development', icon: Code, color: 'from-blue-500 to-cyan-500' },
-    { name: 'Data Analysis', icon: TrendingUp, color: 'from-green-500 to-emerald-500' },
-    { name: 'Clinical Research', icon: FileText, color: 'from-purple-500 to-indigo-500' },
-    { name: 'Supply Chain', icon: Box, color: 'from-cyan-500 to-blue-500' },
-    { name: 'Mobile App Development', icon: Smartphone, color: 'from-purple-500 to-indigo-500' },
-    { name: 'Content Writing', icon: FileText, color: 'from-orange-500 to-amber-500' },
-    { name: 'Video Editing', icon: Video, color: 'from-red-500 to-pink-500' },
-    { name: 'Social Media Marketing', icon: Users, color: 'from-blue-500 to-purple-500' },
-    { name: 'Virtual Assistant', icon: Headphones, color: 'from-teal-500 to-cyan-500' },
-    { name: 'Translation Services', icon: Globe, color: 'from-indigo-500 to-blue-500' },
-    { name: 'Voice Over', icon: Mic, color: 'from-purple-500 to-pink-500' },
-    { name: 'Design Services', icon: Palette, color: 'from-pink-500 to-rose-500' },
+    { name: 'AI Development', icon: Code, color: 'from-blue-500 to-cyan-500', slug: 'ai-development' },
+    { name: 'Data Analysis', icon: TrendingUp, color: 'from-green-500 to-emerald-500', slug: 'data-analysis' },
+    { name: 'Clinical Research', icon: FileText, color: 'from-purple-500 to-indigo-500', slug: 'clinical-research' },
+    { name: 'Supply Chain', icon: Box, color: 'from-cyan-500 to-blue-500', slug: 'supply-chain' },
+    { name: 'Mobile App Development', icon: Smartphone, color: 'from-purple-500 to-indigo-500', slug: 'mobile-app-development' },
+    { name: 'Content Writing', icon: FileText, color: 'from-orange-500 to-amber-500', slug: 'content-writing' },
+    { name: 'Video Editing', icon: Video, color: 'from-red-500 to-pink-500', slug: 'video-editing' },
+    { name: 'Social Media Marketing', icon: Users, color: 'from-blue-500 to-purple-500', slug: 'social-media-marketing' },
+    { name: 'Virtual Assistant', icon: Headphones, color: 'from-teal-500 to-cyan-500', slug: 'virtual-assistant' },
+    { name: 'Translation Services', icon: Globe, color: 'from-indigo-500 to-blue-500', slug: 'translation-services' },
+    { name: 'Voice Over', icon: Mic, color: 'from-purple-500 to-pink-500', slug: 'voice-over' },
+    { name: 'Design Services', icon: Palette, color: 'from-pink-500 to-rose-500', slug: 'design-services' },
   ];
+
+  const handleServiceClick = (slug: string) => {
+    navigate(`/services/${slug}`);
+  };
 
   return (
     <section className="relative py-20 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
@@ -40,6 +47,7 @@ export default function PopularServicesSection() {
             return (
               <div
                 key={service.name}
+                onClick={() => handleServiceClick(service.slug)}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer group hover:transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"
               >
                 <div className={`bg-gradient-to-br ${service.color} p-8 flex items-center justify-center`}>

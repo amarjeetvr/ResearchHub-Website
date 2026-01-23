@@ -1,16 +1,20 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import App from './App.tsx';
+import ServicePage from './pages/Services/ServicePage';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <Routes>
+          <Route path="/services/:serviceSlug" element={<ServicePage />} />
+          <Route path="/*" element={<App />} />
+        </Routes>
         <Toaster
           position="bottom-right"
           reverseOrder={false}
