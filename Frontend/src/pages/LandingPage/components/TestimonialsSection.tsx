@@ -1,5 +1,6 @@
 import { Star } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -56,43 +57,54 @@ export default function TestimonialsSection() {
   }, []);
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
+    <section className="relative py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+          >
             What Our Clients Say
-          </h2>
-          <p className="text-lg text-gray-300">
-            Trusted by thousands of satisfied clients
-          </p>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-gray-600"
+          >
+            Trusted by thousands of satisfied clients worldwide
+          </motion.p>
         </div>
 
         <div ref={scrollRef} className="flex gap-6 overflow-x-hidden pb-4">
           {[...testimonials, ...testimonials].map((testimonial, index) => (
             <div
               key={index}
-              className="min-w-[350px] bg-white/5 backdrop-blur-sm border border-white/10 shadow-lg rounded-2xl p-8 flex-shrink-0 hover:bg-white/10 transition-all"
+              className="min-w-[350px] bg-white border border-gray-200 shadow-lg rounded-2xl p-8 flex-shrink-0 hover:shadow-xl hover:border-blue-300 transition-all"
             >
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} size={20} className="text-yellow-400 fill-yellow-400" />
                 ))}
               </div>
-              <p className="text-gray-300 mb-6 italic">"{testimonial.quote}"</p>
+              <p className="text-gray-700 mb-6 italic leading-relaxed">"{testimonial.quote}"</p>
               <div className="flex items-center gap-3">
                 <img
                   src={testimonial.photo}
                   alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-blue-200"
                 />
                 <div>
-                  <div className="font-bold text-white">{testimonial.name}</div>
-                  <div className="text-sm text-gray-400">{testimonial.title}</div>
+                  <div className="font-bold text-gray-900">{testimonial.name}</div>
+                  <div className="text-sm text-gray-600">{testimonial.title}</div>
                 </div>
               </div>
             </div>

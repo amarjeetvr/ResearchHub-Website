@@ -11,21 +11,21 @@ html {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1f3a;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3b82f6;
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #3b82f6, #6366f1);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: linear-gradient(to bottom, #2563eb, #4f46e5);
 }
 
 /* Hide scrollbar */
@@ -68,16 +68,16 @@ html {
 
   @keyframes float {
     0%, 100% {
-      transform: translateY(0) translateX(0);
+      transform: translateY(0) translateX(0) rotate(0deg);
     }
     25% {
-      transform: translateY(-20px) translateX(10px);
+      transform: translateY(-20px) translateX(10px) rotate(5deg);
     }
     50% {
-      transform: translateY(-10px) translateX(-10px);
+      transform: translateY(-10px) translateX(-10px) rotate(-5deg);
     }
     75% {
-      transform: translateY(-30px) translateX(5px);
+      transform: translateY(-30px) translateX(5px) rotate(3deg);
     }
   }
 
@@ -90,10 +90,46 @@ html {
     }
   }
 
+  @keyframes gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+    }
+  }
+
+  @keyframes float-3d {
+    0%, 100% {
+      transform: translateY(0) translateZ(0) rotateX(0deg);
+    }
+    50% {
+      transform: translateY(-20px) translateZ(20px) rotateX(5deg);
+    }
+  }
+
   .animate-shimmer {
     background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
 
   /* Line Clamp */

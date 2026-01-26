@@ -1,5 +1,6 @@
 import { Users, FolderOpen, DollarSign, AlertCircle, Shield, Settings, BarChart3, FileText, Award, Wrench, LogOut, Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { adminLogout } from '../../../../services/authApi';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useState } from 'react';
@@ -30,87 +31,134 @@ export default function AdminSidebar({ activeTab, onTabChange, isMobileMenuOpen,
   };
 
   const menuItems = [
-    { id: 'overview', icon: BarChart3, label: 'Overview' },
-    { id: 'users', icon: Users, label: 'User Management' },
-    { id: 'projects', icon: FolderOpen, label: 'Projects' },
-    { id: 'verifications', icon: Shield, label: 'Verifications' },
-    { id: 'certifications', icon: Award, label: 'Certifications' },
-    { id: 'payments', icon: DollarSign, label: 'Payments & Escrow' },
-    { id: 'disputes', icon: AlertCircle, label: 'Disputes' },
-    { id: 'skills', icon: Wrench, label: 'Skills Management' },
-    { id: 'reports', icon: FileText, label: 'Reports' },
-    { id: 'settings', icon: Settings, label: 'Settings' }
+    { id: 'overview', icon: BarChart3, label: 'Overview', badge: null },
+    { id: 'users', icon: Users, label: 'User Management', badge: '24' },
+    { id: 'projects', icon: FolderOpen, label: 'Projects', badge: '12' },
+    { id: 'verifications', icon: Shield, label: 'Verifications', badge: '5' },
+    { id: 'certifications', icon: Award, label: 'Certifications', badge: null },
+    { id: 'payments', icon: DollarSign, label: 'Payments & Escrow', badge: '3' },
+    { id: 'disputes', icon: AlertCircle, label: 'Disputes', badge: '2' },
+    { id: 'skills', icon: Wrench, label: 'Skills Management', badge: null },
+    { id: 'reports', icon: FileText, label: 'Reports', badge: null },
+    { id: 'settings', icon: Settings, label: 'Settings', badge: null }
   ];
 
   return (
     <>
       {/* Mobile Menu Button */}
-      <button
+      <motion.button
         onClick={onMobileMenuToggle}
-        className="lg:hidden fixed top-4 left-4 z-50 w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg text-white"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="lg:hidden fixed top-6 left-6 z-50 w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl text-white"
       >
-        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+        <motion.div
+          animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </motion.div>
+      </motion.button>
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"
           onClick={onMobileMenuToggle}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`
-        w-72 min-w-[288px] flex-shrink-0 text-white p-4 sm:p-6 flex flex-col
-        lg:relative lg:translate-x-0
-        fixed top-0 left-0 h-full z-40 transition-transform duration-300
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `} style={{ background: 'linear-gradient(to-br, #0A0E27, #1a1f3a, #0f1629)' }}>
-      {/* Glow orbs for sidebar */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 right-10 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl"></div>
-      </div>
+      <motion.aside 
+        initial={{ x: -320 }}
+        animate={{ x: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        className={`
+          w-80 min-w-[320px] flex-shrink-0 bg-white/80 backdrop-blur-xl border-r border-slate-200/50 p-6 flex flex-col shadow-2xl
+          lg:relative lg:translate-x-0
+          fixed top-0 left-0 h-full z-40 transition-transform duration-300
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
       
-      <div className="flex items-center gap-3 mb-8 lg:mb-12 relative z-10 mt-16 lg:mt-0">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-xl sm:text-2xl">R</span>
+      <div className="flex items-center gap-4 mb-8 mt-16 lg:mt-0">
+        <div className="relative">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+            <span className="text-white font-bold text-2xl">R</span>
+          </div>
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
         </div>
         <div>
-          <div className="text-lg sm:text-xl font-bold text-white">ResearchHub</div>
-          <div className="text-xs sm:text-sm text-gray-300">Admin Panel</div>
+          <div className="text-xl font-bold text-slate-900">ResearchHub</div>
+          <div className="text-sm text-slate-600 font-medium">Admin Panel</div>
         </div>
       </div>
 
-      <nav className="space-y-2 flex-1 relative z-10">
-        {menuItems.map(item => (
-          <button
+      <nav className="space-y-2 flex-1">
+        {menuItems.map((item, index) => (
+          <motion.button
             key={item.id}
+            data-testid={`menu-${item.id}`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.05 }}
+            whileHover={{ x: 4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => {
               onTabChange(item.id);
-              if (onMobileMenuToggle) onMobileMenuToggle();
+              if (onMobileMenuToggle && window.innerWidth < 1024) onMobileMenuToggle();
             }}
-            className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all text-sm sm:text-base ${
-              activeTab === item.id ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 text-cyan-400' : 'hover:bg-white/10 text-gray-300 hover:text-white'
+            className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 ${
+              activeTab === item.id 
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25' 
+                : 'hover:bg-slate-50 text-slate-700 hover:text-slate-900'
             }`}
           >
-            <item.icon size={18} className="sm:w-5 sm:h-5" />
-            <span className="truncate">{item.label}</span>
-          </button>
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-xl transition-colors ${
+                activeTab === item.id 
+                  ? 'bg-white/20' 
+                  : 'bg-slate-100 group-hover:bg-slate-200'
+              }`}>
+                <motion.div
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <item.icon size={18} className={activeTab === item.id ? 'text-white' : 'text-slate-600'} />
+                </motion.div>
+              </div>
+              <span className="font-medium text-sm">{item.label}</span>
+            </div>
+            {item.badge && (
+              <span className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                activeTab === item.id 
+                  ? 'bg-white/20 text-white' 
+                  : 'bg-red-100 text-red-600'
+              }`}>
+                {item.badge}
+              </span>
+            )}
+          </motion.button>
         ))}
       </nav>
 
-      <div className="pt-6 border-t border-white/20 relative z-10">
-        <button 
+      <div className="pt-6 border-t border-slate-200/50 bg-slate-50/50 -mx-6 px-6">
+        <motion.button 
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all text-sm sm:text-base"
+          whileHover={{ x: 4, scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
         >
-          <LogOut size={18} className="sm:w-5 sm:h-5" />
-          <span>Sign Out</span>
-        </button>
+          <div className="p-2 rounded-xl bg-slate-100 group-hover:bg-red-100 transition-colors">
+            <LogOut size={18} className="group-hover:text-red-600" />
+          </div>
+          <span className="font-medium">Sign Out</span>
+        </motion.button>
       </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

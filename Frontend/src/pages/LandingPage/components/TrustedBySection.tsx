@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 export default function TrustedBySection() {
   const companies = [
     { name: 'Amazon', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg' },
@@ -15,32 +17,40 @@ export default function TrustedBySection() {
   ];
 
   return (
-    <section className="relative py-12 sm:py-14 lg:py-6 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-10 left-10 w-48 sm:w-64 h-48 sm:h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-48 sm:w-64 h-48 sm:h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" />
-      </div>
-
+    <section className="relative py-12 sm:py-14 lg:py-16 bg-white overflow-hidden border-y border-gray-200">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center gap-6 sm:gap-8 lg:gap-10 overflow-x-auto lg:overflow-visible justify-start lg:justify-center scrollbar-hide px-1">
-          {companies.map((company) => (
-            <div
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8"
+        >
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Trusted by leading organizations worldwide</p>
+        </motion.div>
+        
+        <div className="flex items-center gap-8 sm:gap-10 lg:gap-12 overflow-x-auto lg:overflow-visible justify-start lg:justify-center scrollbar-hide px-1">
+          {companies.map((company, index) => (
+            <motion.div
               key={company.name}
-              className="flex-shrink-0 flex items-center justify-center opacity-40 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05 }}
+              className="flex-shrink-0 flex items-center justify-center opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300"
             >
               <img
                 src={company.logo}
                 alt={company.name}
-                className="h-6 sm:h-7 lg:h-8 w-auto object-contain filter brightness-0 invert"
+                className="h-7 sm:h-8 lg:h-9 w-auto object-contain"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   const parent = e.currentTarget.parentElement;
                   if (parent) {
-                    parent.innerHTML = `<span class="text-gray-400 text-xs sm:text-sm font-semibold">${company.name}</span>`;
+                    parent.innerHTML = `<span class="text-gray-600 text-sm font-semibold">${company.name}</span>`;
                   }
                 }}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

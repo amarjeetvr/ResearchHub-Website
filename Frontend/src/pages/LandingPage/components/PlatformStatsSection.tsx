@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 export default function PlatformStatsSection() {
   const stats = [
     { number: '10M+', label: 'Total Researchers' },
@@ -7,24 +9,23 @@ export default function PlatformStatsSection() {
   ];
 
   return (
-    <section className="relative py-20 bg-gradient-to-br from-[#0A0E27] via-[#1a1f3a] to-[#0f1629] overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-      </div>
-
+    <section className="relative py-20 bg-white overflow-hidden border-y border-gray-200">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat) => (
-            <div
+          {stats.map((stat, index) => (
+            <motion.div
               key={stat.label}
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 text-center hover:shadow-xl hover:scale-105 transition-all"
             >
-              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+              <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
                 {stat.number}
               </div>
-              <div className="text-lg text-gray-300">{stat.label}</div>
-            </div>
+              <div className="text-lg text-gray-700 font-medium">{stat.label}</div>
+            </motion.div>
           ))}
         </div>
       </div>

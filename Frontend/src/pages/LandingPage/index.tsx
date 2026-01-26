@@ -25,10 +25,6 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showResults, setShowResults] = useState(false);
 
-  const handleSearch = () => {
-    setShowResults(true);
-  };
-
   useEffect(() => {
     if (showResults) {
       window.scrollTo({ top: 600, behavior: 'smooth' });
@@ -59,7 +55,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#0E1724] via-[#1a2332] to-[#0E1724] min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* 1. Navbar - Already in App.tsx */}
       
       {/* 2. Hero Section */}

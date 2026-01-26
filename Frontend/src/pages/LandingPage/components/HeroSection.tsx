@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Search, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, CheckCircle2, Star } from 'lucide-react';
 import type { PageType } from '../../../types';
 
 interface HeroSectionProps {
@@ -120,34 +120,12 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ background: 'linear-gradient(135deg, #0A0E27 0%, #1a1f3a 50%, #0f1629 100%)' }}
-      />
-
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {['📚', '🔬', '💡', '📊', '🎓', '✍️', '🔍', '📝'].map((emoji, i) => (
-          <div
-            key={i}
-            className="absolute text-white/10 text-6xl"
-            style={{
-              left: `${10 + (i * 12)}%`,
-              top: `${20 + (i % 3) * 25}%`,
-              animation: `float ${8 + i * 2}s ease-in-out infinite`,
-              animationDelay: `${i * 0.5}s`
-            }}
-          >
-            {emoji}
-          </div>
-        ))}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
@@ -159,18 +137,20 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight"
             >
-              <span className="text-white">Hire elite Researchers.</span>
+              <span className="text-gray-900">Get a Verified Researcher</span>
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400">Build faster.</span>
+              <span className="text-gray-900">Matched to Your Project</span>
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 font-extrabold">Instantly with AI</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8"
+              className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-xl"
             >
-              Connect with world-class talent. Ship projects at scale. Pay only for results.
+              Connect with the world's most trusted and AI-vetted researchers. Our AI instantly matches you project with the right expertise so you can interview faster.
             </motion.p>
 
             <motion.div
@@ -180,19 +160,19 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
               className="mb-4 sm:mb-6"
             >
               <div
-                className={`bg-white/10 backdrop-blur-2xl rounded-2xl p-1.5 flex flex-row items-center gap-2 border-2 transition-all duration-300 ${
+                className={`bg-white rounded-2xl p-1.5 flex flex-row items-center gap-2 border-2 transition-all duration-300 shadow-xl ${
                   isFocused 
-                    ? 'border-cyan-400 shadow-2xl shadow-cyan-500/40 bg-white/15' 
-                    : 'border-white/20 shadow-lg'
+                    ? 'border-blue-500 shadow-2xl shadow-blue-500/30' 
+                    : 'border-gray-200 shadow-lg'
                 }`}
               >
                 <div className="flex-1 flex items-center px-4 py-2.5">
                   <div className="relative mr-2">
                     <Search size={18} className={`transition-colors ${
-                      isFocused ? 'text-cyan-400' : 'text-gray-400'
+                      isFocused ? 'text-blue-600' : 'text-gray-400'
                     }`} />
                     {isFocused && (
-                      <Sparkles size={10} className="absolute -top-1 -right-1 text-cyan-400 animate-pulse" />
+                      <Sparkles size={10} className="absolute -top-1 -right-1 text-blue-600 animate-pulse" />
                     )}
                   </div>
                   <input
@@ -203,12 +183,12 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
-                    className="flex-1 outline-none text-sm sm:text-base text-white placeholder-gray-400 bg-transparent font-medium"
+                    className="flex-1 outline-none text-sm sm:text-base text-gray-900 placeholder-gray-400 bg-transparent font-medium"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-5 py-2.5 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 hover:scale-105 text-sm whitespace-nowrap"
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl hover:scale-105 text-sm whitespace-nowrap"
                 >
                   Search
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -216,7 +196,7 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
               </div>
 
               <div className="mt-3 flex items-center gap-2 flex-wrap">
-                <span className="text-gray-400 text-xs font-medium">Popular:</span>
+                <span className="text-gray-500 text-xs font-medium">Popular:</span>
                 {popularSearches.map((term, i) => (
                   <motion.button
                     key={term}
@@ -227,7 +207,7 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
                       setSearchQuery(term);
                       handleSearch();
                     }}
-                    className="text-gray-300 hover:text-white text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full transition-all font-medium border border-white/10"
+                    className="text-gray-700 hover:text-blue-600 text-xs bg-white hover:bg-blue-50 px-3 py-1 rounded-full transition-all font-medium border border-gray-200 hover:border-blue-300 shadow-sm"
                   >
                     {term}
                   </motion.button>
@@ -243,16 +223,16 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
             >
               <button
                 onClick={() => onNavigate('signup')}
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 hover:scale-105 text-base flex items-center gap-2"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 text-base flex items-center gap-2"
               >
-                Get Started Free
+                Hire a Researcher
                 <ArrowRight size={20} />
               </button>
               <button
                 onClick={() => onNavigate('bidding')}
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 border-2 border-white/30 hover:border-white/50 text-base flex items-center gap-2"
+                className="bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl font-bold transition-all duration-300 border-2 border-blue-200 hover:border-blue-300 text-base flex items-center gap-2 shadow-md"
               >
-                Post a Job
+                Get as a Researcher
                 <ArrowRight size={20} />
               </button>
             </motion.div>
@@ -264,46 +244,46 @@ export default function HeroSection({ onNavigate, onShowResults }: HeroSectionPr
             transition={{ duration: 0.8, delay: 0.4 }}
             className="hidden lg:flex items-center justify-center h-full"
           >
-            <div className="relative w-full max-w-lg h-[75vh]">
+            <div className="relative w-full max-w-md">
               {researcherImages.map((img, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ 
                     opacity: idx === currentImageIndex ? 1 : 0,
-                    scale: idx === currentImageIndex ? 1 : 0.8,
+                    scale: idx === currentImageIndex ? 1 : 0.9,
                     zIndex: idx === currentImageIndex ? 10 : 0
                   }}
                   transition={{ duration: 0.7, ease: 'easeInOut' }}
                   className="absolute inset-0"
                 >
-                  <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl shadow-cyan-500/30 border-4 border-white/20">
-                    <img
-                      src={img}
-                      alt={`Researcher ${idx + 1}`}
-                      className="w-full h-full object-cover object-center"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    
-                    <div className="absolute top-6 right-6 bg-green-500 rounded-full p-3 shadow-lg">
-                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
+                  <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 p-6">
+                    <div className="relative w-full h-80 rounded-2xl overflow-hidden mb-4">
+                      <img
+                        src={img}
+                        alt={`Researcher ${idx + 1}`}
+                        className="w-full h-full object-cover object-center"
+                      />
+                      <div className="absolute top-4 right-4 bg-green-500 rounded-full p-2 shadow-lg">
+                        <CheckCircle2 className="w-5 h-5 text-white" />
+                      </div>
                     </div>
 
-                    <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                          {idx + 1}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">Dr. David Chen</h3>
+                          <p className="text-sm text-gray-600">Senior Researcher</p>
                         </div>
-                        <div className="flex-1">
-                          <div className="text-white font-bold text-lg">Expert Researcher</div>
-                          <div className="text-cyan-400 text-sm">Verified Professional</div>
+                        <div className="flex items-center gap-1 bg-yellow-50 px-3 py-1 rounded-full">
+                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                          <span className="text-sm font-bold text-gray-900">5.0</span>
                         </div>
-                        <div className="text-right">
-                          <div className="text-white font-bold text-xl">4.9</div>
-                          <div className="text-gray-300 text-xs">Rating</div>
-                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <CheckCircle2 className="w-4 h-4 text-green-500" />
+                        <span>Verified Professional</span>
                       </div>
                     </div>
                   </div>
