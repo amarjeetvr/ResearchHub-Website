@@ -31,134 +31,99 @@ export default function AdminSidebar({ activeTab, onTabChange, isMobileMenuOpen,
   };
 
   const menuItems = [
-    { id: 'overview', icon: BarChart3, label: 'Overview', badge: null },
-    { id: 'users', icon: Users, label: 'User Management', badge: '24' },
-    { id: 'projects', icon: FolderOpen, label: 'Projects', badge: '12' },
-    { id: 'verifications', icon: Shield, label: 'Verifications', badge: '5' },
-    { id: 'certifications', icon: Award, label: 'Certifications', badge: null },
-    { id: 'payments', icon: DollarSign, label: 'Payments & Escrow', badge: '3' },
-    { id: 'disputes', icon: AlertCircle, label: 'Disputes', badge: '2' },
-    { id: 'skills', icon: Wrench, label: 'Skills Management', badge: null },
-    { id: 'reports', icon: FileText, label: 'Reports', badge: null },
-    { id: 'settings', icon: Settings, label: 'Settings', badge: null }
+    { id: 'overview', icon: BarChart3, label: 'Overview' },
+    { id: 'users', icon: Users, label: 'User Management' },
+    { id: 'projects', icon: FolderOpen, label: 'Projects' },
+    { id: 'verifications', icon: Shield, label: 'Verifications' },
+    { id: 'certifications', icon: Award, label: 'Certifications' },
+    { id: 'disputes', icon: AlertCircle, label: 'Disputes' },
+    { id: 'skills', icon: Wrench, label: 'Skills Management' },
+    { id: 'reports', icon: FileText, label: 'Reports' },
+    { id: 'settings', icon: Settings, label: 'Settings' }
   ];
 
   return (
     <>
       {/* Mobile Menu Button */}
-      <motion.button
+      <button
         onClick={onMobileMenuToggle}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="lg:hidden fixed top-6 left-6 z-50 w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl text-white"
+        className="lg:hidden fixed top-4 left-4 z-50 w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-2xl text-white"
       >
-        <motion.div
-          animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </motion.div>
-      </motion.button>
+        {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div 
           className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"
           onClick={onMobileMenuToggle}
         />
       )}
 
       {/* Sidebar */}
-      <motion.aside 
-        initial={{ x: -320 }}
-        animate={{ x: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      <aside 
         className={`
-          w-80 min-w-[320px] flex-shrink-0 bg-white/80 backdrop-blur-xl border-r border-slate-200/50 p-6 flex flex-col shadow-2xl
+          w-64 min-w-[256px] flex-shrink-0 bg-white/90 backdrop-blur-xl border-r border-slate-200/50 p-3 sm:p-4 lg:p-6 flex flex-col shadow-2xl
           lg:relative lg:translate-x-0
           fixed top-0 left-0 h-full z-40 transition-transform duration-300
           ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
       
-      <div className="flex items-center gap-4 mb-8 mt-16 lg:mt-0">
+      <div className="flex items-center gap-3 mb-6 sm:mb-8 mt-16 lg:mt-0">
         <div className="relative">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-            <span className="text-white font-bold text-2xl">R</span>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+            <span className="text-white font-bold text-lg sm:text-2xl">R</span>
           </div>
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+          <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div>
         </div>
         <div>
-          <div className="text-xl font-bold text-slate-900">ResearchHub</div>
-          <div className="text-sm text-slate-600 font-medium">Admin Panel</div>
+          <div className="text-lg sm:text-xl font-bold text-slate-900">ResearchHub</div>
+          <div className="text-xs sm:text-sm text-slate-600 font-medium">Admin Panel</div>
         </div>
       </div>
 
-      <nav className="space-y-2 flex-1">
-        {menuItems.map((item, index) => (
-          <motion.button
+      <nav className="space-y-1 flex-1">
+        {menuItems.map((item) => (
+          <button
             key={item.id}
             data-testid={`menu-${item.id}`}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-            whileHover={{ x: 4, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             onClick={() => {
               onTabChange(item.id);
               if (onMobileMenuToggle && window.innerWidth < 1024) onMobileMenuToggle();
             }}
-            className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 ${
+            className={`w-full flex items-center px-3 py-2.5 rounded-xl transition-colors duration-200 ${
               activeTab === item.id 
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25' 
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' 
                 : 'hover:bg-slate-50 text-slate-700 hover:text-slate-900'
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-xl transition-colors ${
+              <div className={`p-2 rounded-lg transition-colors ${
                 activeTab === item.id 
                   ? 'bg-white/20' 
-                  : 'bg-slate-100 group-hover:bg-slate-200'
+                  : 'bg-slate-100'
               }`}>
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <item.icon size={18} className={activeTab === item.id ? 'text-white' : 'text-slate-600'} />
-                </motion.div>
+                <item.icon size={16} className={activeTab === item.id ? 'text-white' : 'text-slate-600'} />
               </div>
               <span className="font-medium text-sm">{item.label}</span>
             </div>
-            {item.badge && (
-              <span className={`px-2 py-1 rounded-lg text-xs font-bold ${
-                activeTab === item.id 
-                  ? 'bg-white/20 text-white' 
-                  : 'bg-red-100 text-red-600'
-              }`}>
-                {item.badge}
-              </span>
-            )}
-          </motion.button>
+          </button>
         ))}
       </nav>
 
-      <div className="pt-6 border-t border-slate-200/50 bg-slate-50/50 -mx-6 px-6">
-        <motion.button 
+      <div className="pt-4 border-t border-slate-200/50 bg-slate-50/50 -mx-3 px-3">
+        <button 
           onClick={handleSignOut}
-          whileHover={{ x: 4, scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-200 group"
+          className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-200 group"
         >
-          <div className="p-2 rounded-xl bg-slate-100 group-hover:bg-red-100 transition-colors">
-            <LogOut size={18} className="group-hover:text-red-600" />
+          <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-red-100 transition-colors">
+            <LogOut size={16} className="group-hover:text-red-600" />
           </div>
-          <span className="font-medium">Sign Out</span>
-        </motion.button>
+          <span className="font-medium text-sm">Sign Out</span>
+        </button>
       </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Search, Eye, UserX, MoreVertical, Shield, Mail, Download, Plus, RefreshCw, Grid, List, SortAsc, SortDesc } from 'lucide-react';
+import { Search, Eye, UserX, MoreVertical, Shield, Mail, Download, Plus, RefreshCw, Grid, List, SortAsc, SortDesc, Edit, Trash2, UserCheck, Ban } from 'lucide-react';
 import { useState } from 'react';
 
 interface User {
@@ -20,6 +20,11 @@ export default function UserManagementTable({ users }: { users: User[] }) {
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(5);
 
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -39,16 +44,114 @@ export default function UserManagementTable({ users }: { users: User[] }) {
   };
 
   const selectAllUsers = () => {
-    setSelectedUsers(selectedUsers.length === users.length ? [] : users.map(u => u.id));
+    setSelectedUsers(selectedUsers.length === paginatedUsers.length ? [] : paginatedUsers.map(u => u.id));
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Reset all filters and selections
+    setSearchTerm('');
+    setRoleFilter('All Roles');
+    setStatusFilter('All Status');
+    setSortField('');
+    setSortDirection('asc');
+    setSelectedUsers([]);
+    setCurrentPage(1);
+    // Simulate API refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsRefreshing(false);
+  };
+
+  const handleExport = () => {
+    const csvContent = "data:text/csv;charset=utf-8," + 
+      "Name,Email,Role,Status,Joined\n" +
+      filteredUsers.map(user => `${user.name},${user.email},${user.role},${user.status},${user.joined}`).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "users.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleAddUser = () => {
+    setSelectedUser(null);
+    setShowUserModal(true);
+  };
+
+  const handleViewUser = (user: User) => {
+    setSelectedUser(user);
+    setShowUserModal(true);
+  };
+
+  const handleSuspendUser = (user: User) => {
+    if (confirm(`Are you sure you want to suspend ${user.name}?`)) {
+      console.log('Suspending user:', user.id);
+      // Here you would call your suspend API
+    }
+  };
+
+  const handleBulkEdit = () => {
+    console.log('Bulk editing users:', selectedUsers);
+    // Here you would open bulk edit modal
+  };
+
+  const handleBulkSuspend = () => {
+    if (confirm(`Are you sure you want to suspend ${selectedUsers.length} users?`)) {
+      console.log('Bulk suspending users:', selectedUsers);
+      // Here you would call your bulk suspend API
+    }
+  };
+
+  // Fixed filtering logic with proper role matching
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'All Roles' || user.role === roleFilter;
-    const matchesStatus = statusFilter === 'All Status' || user.status === statusFilter;
+    const matchesSearch = searchTerm === '' || 
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesRole = roleFilter === 'All Roles' || 
+      user.role.toLowerCase() === roleFilter.toLowerCase() ||
+      (roleFilter === 'Clients' && user.role.toLowerCase() === 'client') ||
+      (roleFilter === 'Freelancers' && user.role.toLowerCase() === 'freelancer');
+    
+    const matchesStatus = statusFilter === 'All Status' || 
+      user.status.toLowerCase() === statusFilter.toLowerCase();
+    
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const sortedUsers = [...filteredUsers].sort((a, b) => {
+    if (!sortField) return 0;
+    const aValue = a[sortField as keyof User];
+    const bValue = b[sortField as keyof User];
+    const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+    return sortDirection === 'asc' ? comparison : -comparison;
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(sortedUsers.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const endIndex = startIndex + usersPerPage;
+  const paginatedUsers = sortedUsers.slice(startIndex, endIndex);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSelectedUsers([]); // Clear selections when changing pages
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
 
   return (
     <motion.div 
@@ -66,7 +169,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
               </div>
               User Management
               <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold">
-                {filteredUsers.length}
+                {sortedUsers.length}
               </span>
             </h2>
             <p className="text-slate-600">Manage user accounts, roles, and permissions</p>
@@ -77,15 +180,18 @@ export default function UserManagementTable({ users }: { users: User[] }) {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-all"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-all disabled:opacity-50"
             >
-              <RefreshCw size={16} />
+              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
               Refresh
             </motion.button>
             
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleExport}
               className="flex items-center gap-2 px-4 py-2.5 bg-green-100 text-green-700 rounded-xl font-semibold hover:bg-green-200 transition-all"
             >
               <Download size={16} />
@@ -95,6 +201,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleAddUser}
               className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg"
             >
               <Plus size={16} />
@@ -112,9 +219,9 @@ export default function UserManagementTable({ users }: { users: User[] }) {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-slate-300/50 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm"
             >
-              <option>All Roles</option>
-              <option>Clients</option>
-              <option>Freelancers</option>
+              <option value="All Roles">All Roles</option>
+              <option value="Clients">Clients</option>
+              <option value="Freelancers">Freelancers</option>
             </motion.select>
             
             <motion.select 
@@ -123,10 +230,10 @@ export default function UserManagementTable({ users }: { users: User[] }) {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-slate-300/50 text-slate-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm"
             >
-              <option>All Status</option>
-              <option>Active</option>
-              <option>Pending</option>
-              <option>Suspended</option>
+              <option value="All Status">All Status</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="suspended">Suspended</option>
             </motion.select>
             
             <motion.div 
@@ -185,10 +292,16 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                 {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''} selected
               </span>
               <div className="flex items-center gap-2">
-                <button className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors">
+                <button 
+                  onClick={handleBulkEdit}
+                  className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+                >
                   Bulk Edit
                 </button>
-                <button className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors">
+                <button 
+                  onClick={handleBulkSuspend}
+                  className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors"
+                >
                   Bulk Suspend
                 </button>
               </div>
@@ -208,7 +321,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                   <th className="px-6 py-4">
                     <input
                       type="checkbox"
-                      checked={selectedUsers.length === users.length}
+                      checked={selectedUsers.length === paginatedUsers.length && paginatedUsers.length > 0}
                       onChange={selectAllUsers}
                       className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                     />
@@ -242,7 +355,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((user, index) => (
+                {paginatedUsers.map((user, index) => (
                   <motion.tr 
                     key={user.id}
                     initial={{ opacity: 0, x: -20 }}
@@ -313,6 +426,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                         <motion.button 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleViewUser(user)}
                           className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="View Details"
                         >
@@ -321,6 +435,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                         <motion.button 
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleSuspendUser(user)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Suspend User"
                         >
@@ -345,7 +460,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
           /* Enhanced Grid View */
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredUsers.map((user, index) => (
+              {paginatedUsers.map((user, index) => (
                 <motion.div
                   key={user.id}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -397,6 +512,7 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => handleViewUser(user)}
                       className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                     >
                       <Eye size={14} />
@@ -405,7 +521,17 @@ export default function UserManagementTable({ users }: { users: User[] }) {
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSuspendUser(user)}
+                      className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                      title="Suspend"
+                    >
+                      <UserX size={16} />
+                    </motion.button>
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                      title="More"
                     >
                       <MoreVertical size={16} />
                     </motion.button>
@@ -421,7 +547,9 @@ export default function UserManagementTable({ users }: { users: User[] }) {
       <div className="px-6 py-4 border-t border-slate-200/50 bg-slate-50/30">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-600">Showing {filteredUsers.length} of {users.length} users</span>
+            <span className="text-sm text-slate-600">
+              Showing {startIndex + 1}-{Math.min(endIndex, sortedUsers.length)} of {sortedUsers.length} users
+            </span>
             {selectedUsers.length > 0 && (
               <span className="text-sm text-blue-600 font-medium">
                 {selectedUsers.length} selected
@@ -429,16 +557,87 @@ export default function UserManagementTable({ users }: { users: User[] }) {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 bg-white/80 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm">
+            <button 
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 bg-white/80 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Previous
             </button>
-            <span className="px-3 py-1.5 text-sm font-medium">1 of 10</span>
-            <button className="px-3 py-1.5 bg-white/80 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm">
+            
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                    currentPage === page
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white/80 border border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 bg-white/80 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Next
             </button>
           </div>
         </div>
       </div>
+
+      {/* User Modal */}
+      {showUserModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl"
+          >
+            <h3 className="text-xl font-bold text-slate-900 mb-4">
+              {selectedUser ? `User Details - ${selectedUser.name}` : 'Add New User'}
+            </h3>
+            {selectedUser ? (
+              <div className="space-y-3">
+                <p><strong>Email:</strong> {selectedUser.email}</p>
+                <p><strong>Role:</strong> {selectedUser.role}</p>
+                <p><strong>Status:</strong> {selectedUser.status}</p>
+                <p><strong>Verified:</strong> {selectedUser.verified ? 'Yes' : 'No'}</p>
+                <p><strong>Joined:</strong> {selectedUser.joined}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <input placeholder="Name" className="w-full p-3 border rounded-xl" />
+                <input placeholder="Email" className="w-full p-3 border rounded-xl" />
+                <select className="w-full p-3 border rounded-xl">
+                  <option>Select Role</option>
+                  <option>Client</option>
+                  <option>Freelancer</option>
+                </select>
+              </div>
+            )}
+            <div className="flex gap-3 mt-6">
+              <button 
+                onClick={() => setShowUserModal(false)}
+                className="flex-1 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors"
+              >
+                Close
+              </button>
+              {!selectedUser && (
+                <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                  Add User
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 }

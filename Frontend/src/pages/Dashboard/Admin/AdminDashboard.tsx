@@ -11,6 +11,8 @@ import UserManagementTable from './components/UserManagementTable';
 import VerificationWorkflow from './components/VerificationWorkflow';
 import DisputeResolution from './components/DisputeResolution';
 import SkillsManagement from './components/SkillsManagement';
+import CertificationsManagement from './components/CertificationsManagement';
+import ReportsAnalytics from './components/ReportsAnalytics';
 import PlatformSettings from './components/PlatformSettings';
 import ThreeBackground from '../../../components/ThreeBackground';
 import {
@@ -43,6 +45,8 @@ export default function AdminDashboard() {
       'verifications': 'Verification Requests',
       'disputes': 'Dispute Resolution',
       'skills': 'Skills Management',
+      'certifications': 'Certifications Management',
+      'reports': 'Reports & Analytics',
       'settings': 'Platform Settings'
     };
     return titles[activeTab as keyof typeof titles] || 'Dashboard';
@@ -56,6 +60,8 @@ export default function AdminDashboard() {
       'verifications': 'Review and approve user verification requests',
       'disputes': 'Resolve conflicts between clients and freelancers',
       'skills': 'Manage platform skills and categories',
+      'certifications': 'Manage and verify freelancer certifications',
+      'reports': 'Platform performance insights and analytics',
       'settings': 'Configure platform settings and preferences'
     };
     return descriptions[activeTab as keyof typeof descriptions] || 'Select a section from the sidebar';
@@ -87,26 +93,18 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case 'overview':
         return (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="space-y-8"
-          >
-            <motion.div variants={itemVariants}>
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+            <div>
               <StatsOverview stats={ADMIN_STATS} />
-            </motion.div>
-            <motion.div 
-              variants={itemVariants}
-              className="grid grid-cols-1 xl:grid-cols-2 gap-8"
-            >
+            </div>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
               <RecentUsersCard users={RECENT_USERS} />
               <PlatformActivityCard />
-            </motion.div>
-            <motion.div variants={itemVariants}>
+            </div>
+            <div>
               <RecentProjectsTable projects={RECENT_PROJECTS} />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         );
 
       case 'users':
@@ -164,6 +162,28 @@ export default function AdminDashboard() {
           </motion.div>
         );
 
+      case 'certifications':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <CertificationsManagement />
+          </motion.div>
+        );
+
+      case 'reports':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
+            <ReportsAnalytics />
+          </motion.div>
+        );
+
       case 'settings':
         return (
           <motion.div
@@ -190,7 +210,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
       <ThreeBackground />
       
       <AdminSidebar 
@@ -200,44 +220,39 @@ export default function AdminDashboard() {
         onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
       
-      <main className="flex-1 min-w-0 relative z-10 overflow-x-auto lg:ml-0">
+      <main className="flex-1 min-w-0 relative z-10 overflow-x-auto">
         <div className="min-h-screen bg-white/40 backdrop-blur-sm">
-          <div className="p-6 sm:p-8 lg:p-10">
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-10">
             <div className="max-w-7xl mx-auto">
               {/* Enhanced Header */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="mb-8 mt-16 lg:mt-0"
-              >
+              <div className="mb-4 sm:mb-6 lg:mb-8 mt-16 lg:mt-0">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-2">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-slate-900 mb-2">
                       {getPageTitle()}
                     </h1>
-                    <p className="text-slate-600 text-lg">
+                    <p className="text-slate-600 text-sm sm:text-base lg:text-lg">
                       {getPageDescription()}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200/50 rounded-xl shadow-sm">
-                      <span className="text-sm text-slate-600">Last updated: </span>
-                      <span className="text-sm font-semibold text-slate-900">
+                    <div className="px-3 sm:px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200/50 rounded-xl shadow-sm">
+                      <span className="text-xs sm:text-sm text-slate-600">Last updated: </span>
+                      <span className="text-xs sm:text-sm font-semibold text-slate-900">
                         {new Date().toLocaleTimeString()}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="mt-6 h-px bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200"></div>
-              </motion.div>
+                <div className="mt-4 sm:mt-6 h-px bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200"></div>
+              </div>
               
               {/* Content with smooth transitions */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="pb-10"
+                className="pb-6 sm:pb-8 lg:pb-10"
               >
                 {renderContent()}
               </motion.div>
